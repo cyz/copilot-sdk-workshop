@@ -99,7 +99,34 @@ uma solicitação MCP — segue pelo ramo `PermissionDecision.Reject` com feedba
 
 :::language nodejs
 Abra `src/index.ts` e adicione `exhibitFileName` e `exhibitWritePermission` à importação de
-`./curator.js`. Depois, acima de `main`, adicione a configuração da sessão HTML e o construtor do
+`./curator.js`:
+
+```typescript
+import {
+  approvedFactLookupName,
+  askLine,
+  askYesNo,
+  boundFacts,
+  closeTerminal,
+  createApprovedFactLookup,
+  exhibitFileName,
+  exhibitWritePermission,
+  extractSources,
+  factSets,
+  formatValidation,
+  generationTimeoutMs,
+  readFacts,
+  researchTimeoutMs,
+  streamExhibit,
+  validateExhibit,
+  wikipediaPermissionHandler,
+  wikipediaServer,
+  wikipediaTools,
+  type WikipediaSource,
+} from "./curator.js";
+```
+
+Depois, acima de `main`, adicione a configuração da sessão HTML e o construtor do
 prompt correspondente:
 
 ```typescript

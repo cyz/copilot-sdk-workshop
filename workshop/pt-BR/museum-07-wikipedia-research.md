@@ -180,7 +180,30 @@ ou malformada produz uma lista vazia em vez de um erro.
 :::language nodejs
 Abra `src/index.ts` e adicione à importação de `./curator.js`: `extractSources`,
 `researchTimeoutMs`, `wikipediaPermissionHandler`, `wikipediaServer`, `wikipediaTools` e
-`type WikipediaSource`.
+`type WikipediaSource`. A importação fica assim:
+
+```typescript
+import {
+  approvedFactLookupName,
+  askLine,
+  askYesNo,
+  boundFacts,
+  closeTerminal,
+  createApprovedFactLookup,
+  extractSources,
+  factSets,
+  formatValidation,
+  generationTimeoutMs,
+  readFacts,
+  researchTimeoutMs,
+  streamExhibit,
+  validateExhibit,
+  wikipediaPermissionHandler,
+  wikipediaServer,
+  wikipediaTools,
+  type WikipediaSource,
+} from "./curator.js";
+```
 
 Adicione a mensagem de sistema da pesquisa logo abaixo da mensagem do curador:
 

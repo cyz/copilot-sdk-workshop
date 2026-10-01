@@ -176,7 +176,30 @@ section yields an empty list rather than an error.
 :::language nodejs
 Open `src/index.ts`. Add to the helper import: `extractSources`,
 `researchTimeoutMs`, `wikipediaPermissionHandler`, `wikipediaServer`, `wikipediaTools`, and
-`type WikipediaSource`.
+`type WikipediaSource`:
+
+```typescript
+import {
+  approvedFactLookupName,
+  askLine,
+  askYesNo,
+  boundFacts,
+  closeTerminal,
+  createApprovedFactLookup,
+  extractSources,
+  factSets,
+  formatValidation,
+  generationTimeoutMs,
+  readFacts,
+  researchTimeoutMs,
+  streamExhibit,
+  validateExhibit,
+  wikipediaPermissionHandler,
+  wikipediaServer,
+  wikipediaTools,
+  type WikipediaSource,
+} from "./curator.js";
+```
 
 Add the research system message beside the curator one:
 

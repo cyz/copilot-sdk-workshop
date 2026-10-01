@@ -94,7 +94,34 @@ file name, a traversal like `../../etc/hosts`, a shell request, an MCP request â
 
 :::language nodejs
 Open `src/index.ts`. Add `exhibitFileName` and `exhibitWritePermission` to the
-helper import, then add the HTML configuration and prompt builder:
+helper import:
+
+```typescript
+import {
+  approvedFactLookupName,
+  askLine,
+  askYesNo,
+  boundFacts,
+  closeTerminal,
+  createApprovedFactLookup,
+  exhibitFileName,
+  exhibitWritePermission,
+  extractSources,
+  factSets,
+  formatValidation,
+  generationTimeoutMs,
+  readFacts,
+  researchTimeoutMs,
+  streamExhibit,
+  validateExhibit,
+  wikipediaPermissionHandler,
+  wikipediaServer,
+  wikipediaTools,
+  type WikipediaSource,
+} from "./curator.js";
+```
+
+Then add the HTML configuration and prompt builder:
 
 ```typescript
 function htmlConfig(workingDirectory: string): SessionConfig {

@@ -61,7 +61,26 @@ five terms in `ProhibitedVocabulary`. Each failed rule appends a plain sentence 
 
 :::language nodejs
 Open `src/index.ts`. Add `formatValidation` and `validateExhibit` to the helper
-import, then capture the returned exhibit and print the report:
+import:
+
+```typescript
+import {
+  approvedFactLookupName,
+  askLine,
+  askYesNo,
+  boundFacts,
+  closeTerminal,
+  createApprovedFactLookup,
+  factSets,
+  formatValidation,
+  generationTimeoutMs,
+  readFacts,
+  streamExhibit,
+  validateExhibit,
+} from "./curator.js";
+```
+
+Then capture the returned exhibit and print the report:
 
 ```typescript
     console.log();

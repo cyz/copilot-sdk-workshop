@@ -165,10 +165,22 @@ always stops afterwards in the `finally`.
 
 :::language nodejs
 Open `src/index.ts`. Add `generationTimeoutMs` to the helper import and the
-session config type to the SDK import:
+session config type to the SDK import. The top of the file now reads:
 
 ```typescript
 import { approveAll, CopilotClient, type SessionConfig } from "@github/copilot-sdk";
+import {
+  approvedFactLookupName,
+  askLine,
+  askYesNo,
+  boundFacts,
+  closeTerminal,
+  createApprovedFactLookup,
+  factSets,
+  generationTimeoutMs,
+  readFacts,
+  streamExhibit,
+} from "./curator.js";
 ```
 
 Add the configuration builder and the session runner above `main`:

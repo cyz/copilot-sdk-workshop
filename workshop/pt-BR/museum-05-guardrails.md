@@ -168,10 +168,22 @@ dentro do `try`, portanto o cliente sempre para depois, no `finally`.
 
 :::language nodejs
 Abra `src/index.ts`. Adicione `generationTimeoutMs` à importação de `./curator.js` e o tipo de
-configuração de sessão à importação do SDK:
+configuração de sessão à importação do SDK. O início do arquivo fica assim:
 
 ```typescript
 import { approveAll, CopilotClient, type SessionConfig } from "@github/copilot-sdk";
+import {
+  approvedFactLookupName,
+  askLine,
+  askYesNo,
+  boundFacts,
+  closeTerminal,
+  createApprovedFactLookup,
+  factSets,
+  generationTimeoutMs,
+  readFacts,
+  streamExhibit,
+} from "./curator.js";
 ```
 
 Adicione o construtor de configuração e o executor de sessão acima de `main`:

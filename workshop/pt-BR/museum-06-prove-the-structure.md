@@ -63,7 +63,26 @@ modelo participa em momento algum.
 
 :::language nodejs
 Abra `src/index.ts` e adicione `formatValidation` e `validateExhibit` à importação de
-`./curator.js`. Depois, dentro do `try` de `main`, substitua as linhas `console.log();` e `await runSession(...)`,
+`./curator.js`:
+
+```typescript
+import {
+  approvedFactLookupName,
+  askLine,
+  askYesNo,
+  boundFacts,
+  closeTerminal,
+  createApprovedFactLookup,
+  factSets,
+  formatValidation,
+  generationTimeoutMs,
+  readFacts,
+  streamExhibit,
+  validateExhibit,
+} from "./curator.js";
+```
+
+Depois, dentro do `try` de `main`, substitua as linhas `console.log();` e `await runSession(...)`,
 que vêm logo após a confirmação dos fatos, por este trecho, que guarda a exposição retornada e
 imprime o relatório:
 
