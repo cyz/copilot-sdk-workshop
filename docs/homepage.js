@@ -129,7 +129,7 @@
             })
             : messages.chooseWorkshopToContinue;
         installCommand.textContent = language.installCommand;
-        runtimeNote.textContent = language.runtimeNote;
+        runtimeNote.textContent = messages.runtimeNotes?.[language.id] ?? language.runtimeNote;
         startGuidance.textContent = workshop?.guidance ?? messages.chooseWorkshopToContinue;
     }
 

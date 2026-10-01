@@ -144,17 +144,17 @@ System message: replace
             themeDark: 'Escuro',
             switchToLight: 'Mudar para o tema claro',
             switchToDark: 'Mudar para o tema escuro',
-            heroTitle: 'Escolha o que seu agente fará.',
+            heroTitle: 'Escolha qual será a missão do seu agente.',
             heroDefinition: 'Dois workshops. Um SDK. Crie um agente para o ciclo de vida de software ou leve o Copilot para um domínio completamente diferente.',
             chooseWorkshop: 'Escolha um workshop',
             accessibilityKicker: 'Ferramenta para desenvolvedores · 90 minutos',
             accessibilityTitle: 'Revise a acessibilidade da Web',
             accessibilityDescription: 'Crie um agente de SDLC que inspeciona uma página, consulta orientações das WCAG e produz um relatório baseado em evidências.',
             accessibilityCapabilities: 'Streaming · ferramentas locais · Playwright MCP · permissões',
-            museumKicker: 'Ferramenta fora de SDLC · 90 minutos',
-            museumTitle: 'Crie a curadoria de uma exposição',
-            museumDescription: 'Crie um agente interpretativo fundamentado que transforma fatos aprovados em textos de exposição prontos para visitantes.',
-            museumCapabilities: 'Persona personalizada · uma ferramenta do aplicativo · validação · avaliação',
+            museumKicker: 'Ferramenta fora do SDLC · 90 minutos',
+            museumTitle: 'Faça a curadoria de uma exposição de museu',
+            museumDescription: 'Crie um agente de curadoria baseado em fatos aprovados para produzir textos de exposição claros e adequados ao público.',
+            museumCapabilities: 'Persona personalizada · uma ferramenta controlada pelo aplicativo · validação · avaliação',
             chooseLanguage: 'Escolha a linguagem de programação',
             chooseWorkshopFirst: 'Primeiro escolha um workshop. Depois, selecione a linguagem da implementação.',
             programmingLanguage: 'Linguagem de programação',
@@ -165,9 +165,9 @@ System message: replace
             outcomesTitle: 'Crie o aplicativo. Entenda os limites.',
             outcomeSession: 'Crie e gerencie uma sessão do Copilot.',
             outcomePolicy: 'Separe a política permanente do agente dos dados da tarefa.',
-            outcomeTools: 'Escolha a superfície de ferramentas adequada para o trabalho.',
-            outcomeValidation: 'Valide requisitos objetivos de saída no código.',
-            outcomeControls: 'Explique onde termina a orientação do prompt e começam os controles rígidos.',
+            outcomeTools: 'Escolha o conjunto de ferramentas certo para cada tarefa.',
+            outcomeValidation: 'Valide em código os requisitos objetivos da saída.',
+            outcomeControls: 'Explique onde termina a orientação do prompt e onde começam os controles efetivos.',
             lesson: Object.freeze({
                 pageDescription: 'Workshops autoguiados e multilíngues para criar agentes com o GitHub Copilot SDK.',
                 skipLink: 'Pular para a lição',
@@ -207,8 +207,8 @@ System message: replace
                 refreshGuidance: 'Atualize a página. Se o problema continuar, verifique se o Markdown do workshop foi publicado.',
                 unableStatus: 'Não foi possível carregar esta lição.',
                 lessonRequestFailed: 'A solicitação da lição falhou com o status HTTP {status}.',
-                loadedStatus: '{title} foi carregada.',
-                loadingStatus: 'Carregando {title}.',
+                loadedStatus: 'Lição carregada: {title}.',
+                loadingStatus: 'Carregando a lição: {title}.',
                 fallbackNotice: 'Esta lição ainda não está disponível em português. A versão em inglês será exibida.'
             }),
             steps: Object.freeze({
@@ -223,14 +223,22 @@ System message: replace
                 '08-model-selection': Object.freeze({ title: 'Selecione um modelo', navTitle: 'Seleção de modelo' }),
                 '09-interactive-html-report': Object.freeze({ title: 'Gere um relatório HTML interativo', navTitle: 'Relatório interativo' }),
                 'museum-00-preflight': Object.freeze({ title: 'Prepare o Museum Exhibit Studio', navTitle: 'Preparação', time: 'Sem tempo definido' }),
-                'museum-01-first-curator-session': Object.freeze({ title: 'Crie sua primeira sessão de curadoria', navTitle: 'Primeira sessão' }),
-                'museum-02-stream-the-curator': Object.freeze({ title: 'Transmita a resposta do curador', navTitle: 'Streaming' }),
-                'museum-03-curator-voice': Object.freeze({ title: 'Dê uma voz ao curador', navTitle: 'Voz do curador' }),
-                'museum-04-approved-facts': Object.freeze({ title: 'Fundamente a resposta em fatos aprovados', navTitle: 'Fatos aprovados' }),
-                'museum-05-guardrails': Object.freeze({ title: 'Defina as proteções', navTitle: 'Proteções' }),
+                'museum-01-first-curator-session': Object.freeze({ title: 'Crie sua primeira sessão do curador', navTitle: 'Primeira sessão' }),
+                'museum-02-stream-the-curator': Object.freeze({ title: 'Exiba a resposta do curador em streaming', navTitle: 'Streaming' }),
+                'museum-03-curator-voice': Object.freeze({ title: 'Dê voz ao curador', navTitle: 'Voz do curador' }),
+                'museum-04-approved-facts': Object.freeze({ title: 'Fundamente o texto em fatos aprovados', navTitle: 'Fatos aprovados' }),
+                'museum-05-guardrails': Object.freeze({ title: 'Defina os guardrails', navTitle: 'Guardrails' }),
                 'museum-06-prove-the-structure': Object.freeze({ title: 'Comprove a estrutura', navTitle: 'Verificações estruturais' }),
                 'museum-07-wikipedia-research': Object.freeze({ title: 'Pesquise com o MCP da Wikipedia', navTitle: 'Pesquisa na Wikipedia' }),
                 'museum-08-interactive-exhibit-page': Object.freeze({ title: 'Publique uma página interativa da exposição', navTitle: 'Página da exposição' })
+            }),
+            runtimeNotes: Object.freeze({
+                dotnet: 'Requer o .NET SDK e um runtime de C# compatível.',
+                go: 'Requer um toolchain Go compatível e um módulo Go.',
+                java: 'Requer um JDK compatível e um projeto Maven ou Gradle.',
+                nodejs: 'Requer uma versão LTS atual do Node.js.',
+                python: 'Requer Python e um ambiente virtual isolado.',
+                rust: 'Requer Rust e Cargo instalados via rustup.'
             }),
             nowChooseLanguage: 'Agora escolha uma linguagem para {workshop}.',
             chooseWorkshopThenLanguage: 'Primeiro escolha um workshop. Depois, selecione a linguagem da implementação.',
@@ -241,7 +249,7 @@ System message: replace
             workshops: Object.freeze({
                 sdlc: Object.freeze({
                     name: 'Accessibility Reviewer',
-                    guidance: 'Crie uma ferramenta de SDLC para desenvolvedores no workshop principal de 90 minutos.',
+                    guidance: 'Crie uma ferramenta de SDLC para desenvolvedores em um workshop principal de 90 minutos.',
                     preview: `URL → inspeção com Playwright
     → consulta às WCAG
     → relatório estruturado
@@ -254,13 +262,13 @@ O campo de nome não tem um nome acessível.`
                 }),
                 museum: Object.freeze({
                     name: 'Museum Exhibit Studio',
-                    guidance: 'Crie uma ferramenta de curadoria fora de SDLC no workshop principal de 90 minutos.',
+                    guidance: 'Crie uma ferramenta de curadoria, fora do SDLC, em um workshop principal de 90 minutos.',
                     preview: `Fatos aprovados → sessão do curador
                 → validação da exposição
                 → texto pronto para visitantes
 
 Ferramentas disponíveis: []
-Mensagem do sistema: substituir
+Mensagem de sistema: replace
 
 # Viagem à Lua
 ## Narrativa
