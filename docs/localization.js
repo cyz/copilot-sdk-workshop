@@ -15,36 +15,38 @@
 
     const messages = Object.freeze({
         en: Object.freeze({
-            pageTitle: 'Choose your workshop | GitHub Copilot SDK',
-            pageDescription: 'Choose a hands-on GitHub Copilot SDK workshop: build an SDLC accessibility reviewer or a grounded museum curator.',
+            pageTitle: 'Museum Exhibit Studio | GitHub Copilot SDK Workshop',
+            pageDescription: 'A hands-on GitHub Copilot SDK workshop in Node.js: build a grounded museum curator agent.',
             skipLink: 'Skip to workshop overview',
             homeLabel: 'GitHub Copilot SDK Workshop home',
             resourcesLabel: 'Workshop resources',
-            targetApp: 'Target app ↗',
-            sdkDocs: '📚 SDK docs ↗',
+            sdkDocs: '📚 Node.js SDK docs ↗',
             localeLabel: 'Content language',
             themeLight: 'Light',
             themeDark: 'Dark',
             switchToLight: 'Switch to light theme',
             switchToDark: 'Switch to dark theme',
-            heroTitle: 'Choose what your agent is here to do.',
-            heroDefinition: 'Two workshops. One SDK. Build an agent for the software lifecycle, or take Copilot into a completely different domain.',
-            chooseWorkshop: 'Choose a workshop',
-            accessibilityKicker: 'Developer tool · 90 minutes',
-            accessibilityTitle: 'Review web accessibility',
-            accessibilityDescription: 'Build an SDLC agent that inspects a page, consults WCAG guidance, and produces an evidence-based report.',
-            accessibilityCapabilities: 'Streaming · local tools · Playwright MCP · permissions',
-            museumKicker: 'Non-SDLC tool · 90 minutes',
+            heroTitle: 'Build a museum curator agent with the GitHub Copilot SDK.',
+            heroDefinition: 'One hands-on workshop in Node.js and TypeScript. Take Copilot outside the software lifecycle and turn approved facts into visitor-ready exhibit copy, with the guardrails in your own code.',
+            workshopLabel: 'The workshop',
+            museumKicker: 'Node.js · TypeScript · 90 minutes',
             museumTitle: 'Curate a museum exhibit',
             museumDescription: 'Build a grounded interpretive agent that turns approved facts into visitor-ready exhibit copy.',
-            museumCapabilities: 'Custom persona · one application-owned tool · validation · evaluation',
-            chooseLanguage: 'Choose your workshop language',
-            chooseWorkshopFirst: 'Choose a workshop first, then select its implementation language.',
-            programmingLanguage: 'Programming language',
-            startSelected: 'Start selected workshop',
-            startGuidance: 'Choose a workshop and language. No prior agent or SDK experience required.',
-            previewLabel: 'Selected workshop preview',
-            previewPlaceholder: 'Select a workshop to preview its agent flow.',
+            museumCapabilities: 'Custom persona · one application-owned tool · MCP · validation',
+            runtimeNote: 'Requires Node.js 22.12 or newer.',
+            startWorkshop: 'Start the workshop',
+            startGuidance: 'No prior agent or SDK experience required. Machine setup happens in an untimed preflight.',
+            previewLabel: 'Workshop preview',
+            preview: `Approved facts → curator session
+               → exhibit validation
+               → visitor-ready copy
+
+Available tools: []
+System message: replace
+
+# Journey to the Moon
+## Narrative
+## Visitor questions`,
             outcomesTitle: 'Build the app. Understand the boundary.',
             outcomeSession: 'Create and manage a Copilot session.',
             outcomePolicy: 'Separate durable agent policy from task data.',
@@ -52,17 +54,14 @@
             outcomeValidation: 'Validate objective output requirements in code.',
             outcomeControls: 'Explain where prompt guidance ends and hard controls begin.',
             lesson: Object.freeze({
-                pageDescription: 'Self-guided, multilingual workshops for building agents with the GitHub Copilot SDK.',
+                pageDescription: 'A self-guided workshop for building a museum curator agent with the GitHub Copilot SDK for Node.js.',
                 skipLink: 'Skip to lesson',
                 openSections: 'Open sections',
                 closeSections: 'Close sections',
                 homeLabel: 'Copilot SDK Workshop home',
                 actionsLabel: 'Lesson actions',
-                languageLabel: 'Language',
-                languageAriaLabel: 'Workshop programming language',
-                chooseLanguage: 'Choose language',
                 hub: '🏠 Hub',
-                docs: '📚 Docs ↗',
+                docs: '📚 Node.js docs ↗',
                 previous: 'Previous',
                 next: 'Next',
                 loading: 'Loading',
@@ -76,11 +75,6 @@
                 optionalExtension: 'Optional extension',
                 preflight: 'Preflight',
                 stepOf: 'Step {number} of {count}',
-                docsFor: '📚 {language} docs ↗',
-                chooseLanguagePageTitle: 'Choose a language | Copilot SDK Workshop',
-                chooseLanguageHeading: 'Choose a workshop language',
-                chooseLanguageDetails: 'Select one of the six supported languages above before loading a lesson.',
-                chooseLanguageStatus: 'Choose a workshop language to continue.',
                 copy: 'Copy',
                 copied: 'Copied',
                 copyFailed: 'Copy failed',
@@ -94,74 +88,41 @@
                 loadingStatus: 'Loading {title}.',
                 fallbackNotice: 'This lesson is not available in Portuguese yet. Showing the English version.'
             }),
-            steps: Object.freeze({}),
-            nowChooseLanguage: 'Now choose a language for {workshop}.',
-            chooseWorkshopThenLanguage: 'Choose a workshop first, then select its implementation language.',
-            workshopUsesSdk: '{workshop} will use the {language} SDK.',
-            chooseWorkshopToContinue: 'Choose a workshop to continue.',
-            sdkDocsFor: '{language} SDK docs ↗',
-            startWorkshop: 'Start {workshop}',
-            workshops: Object.freeze({
-                sdlc: Object.freeze({
-                    name: 'Accessibility Reviewer',
-                    guidance: 'Build an SDLC developer tool in a 90-minute core workshop.',
-                    preview: `URL → Playwright inspection
-     → WCAG lookup
-     → structured report
-
-[tool] playwright-browser_navigate
-[tool] accessibility_rule_lookup
-
-Finding
-The name input has no accessible name.`
-                }),
-                museum: Object.freeze({
-                    name: 'Museum Exhibit Studio',
-                    guidance: 'Build a non-SDLC curator tool in a 90-minute core workshop.',
-                    preview: `Approved facts → curator session
-               → exhibit validation
-               → visitor-ready copy
-
-Available tools: []
-System message: replace
-
-# Journey to the Moon
-## Narrative
-## Visitor questions`
-                })
-            })
+            steps: Object.freeze({})
         }),
         'pt-BR': Object.freeze({
-            pageTitle: 'Escolha seu workshop | GitHub Copilot SDK',
-            pageDescription: 'Escolha um workshop prático do GitHub Copilot SDK: crie um revisor de acessibilidade para SDLC ou um curador de museu fundamentado em fatos.',
+            pageTitle: 'Museum Exhibit Studio | GitHub Copilot SDK Workshop',
+            pageDescription: 'Um workshop prático do GitHub Copilot SDK em Node.js: crie um agente curador de museu fundamentado em fatos.',
             skipLink: 'Pular para a visão geral do workshop',
             homeLabel: 'Página inicial do GitHub Copilot SDK Workshop',
             resourcesLabel: 'Recursos do workshop',
-            targetApp: 'Aplicativo-alvo ↗',
-            sdkDocs: '📚 Documentação do SDK ↗',
+            sdkDocs: '📚 Documentação do SDK para Node.js ↗',
             localeLabel: 'Idioma do conteúdo',
             themeLight: 'Claro',
             themeDark: 'Escuro',
             switchToLight: 'Mudar para o tema claro',
             switchToDark: 'Mudar para o tema escuro',
-            heroTitle: 'Escolha qual será a missão do seu agente.',
-            heroDefinition: 'Dois workshops. Um SDK. Crie um agente para o ciclo de vida de software ou leve o Copilot para um domínio completamente diferente.',
-            chooseWorkshop: 'Escolha um workshop',
-            accessibilityKicker: 'Ferramenta para desenvolvedores · 90 minutos',
-            accessibilityTitle: 'Revise a acessibilidade da Web',
-            accessibilityDescription: 'Crie um agente de SDLC que inspeciona uma página, consulta orientações das WCAG e produz um relatório baseado em evidências.',
-            accessibilityCapabilities: 'Streaming · ferramentas locais · Playwright MCP · permissões',
-            museumKicker: 'Ferramenta fora do SDLC · 90 minutos',
+            heroTitle: 'Crie um agente curador de museu com o GitHub Copilot SDK.',
+            heroDefinition: 'Um workshop prático em Node.js e TypeScript. Leve o Copilot para fora do ciclo de vida de software e transforme fatos aprovados em textos de exposição prontos para o público, com os guardrails no seu próprio código.',
+            workshopLabel: 'O workshop',
+            museumKicker: 'Node.js · TypeScript · 90 minutos',
             museumTitle: 'Faça a curadoria de uma exposição de museu',
             museumDescription: 'Crie um agente de curadoria baseado em fatos aprovados para produzir textos de exposição claros e adequados ao público.',
-            museumCapabilities: 'Persona personalizada · uma ferramenta controlada pelo aplicativo · validação · avaliação',
-            chooseLanguage: 'Escolha a linguagem de programação',
-            chooseWorkshopFirst: 'Primeiro escolha um workshop. Depois, selecione a linguagem da implementação.',
-            programmingLanguage: 'Linguagem de programação',
-            startSelected: 'Iniciar workshop selecionado',
-            startGuidance: 'Escolha um workshop e uma linguagem. Não é necessário ter experiência prévia com agentes ou com o SDK.',
-            previewLabel: 'Prévia do workshop selecionado',
-            previewPlaceholder: 'Selecione um workshop para visualizar o fluxo do agente.',
+            museumCapabilities: 'Persona personalizada · uma ferramenta controlada pelo aplicativo · MCP · validação',
+            runtimeNote: 'Requer Node.js 22.12 ou mais recente.',
+            startWorkshop: 'Começar o workshop',
+            startGuidance: 'Não é necessário ter experiência prévia com agentes ou com o SDK. A preparação da máquina é feita em uma etapa inicial sem tempo definido.',
+            previewLabel: 'Prévia do workshop',
+            preview: `Fatos aprovados → sessão do curador
+                → validação da exposição
+                → texto pronto para visitantes
+
+Ferramentas disponíveis: []
+Mensagem de sistema: replace
+
+# Viagem à Lua
+## Narrativa
+## Perguntas dos visitantes`,
             outcomesTitle: 'Crie o aplicativo. Entenda os limites.',
             outcomeSession: 'Crie e gerencie uma sessão do Copilot.',
             outcomePolicy: 'Separe a política permanente do agente dos dados da tarefa.',
@@ -169,17 +130,14 @@ System message: replace
             outcomeValidation: 'Valide em código os requisitos objetivos da saída.',
             outcomeControls: 'Explique onde termina a orientação do prompt e onde começam os controles efetivos.',
             lesson: Object.freeze({
-                pageDescription: 'Workshops autoguiados e multilíngues para criar agentes com o GitHub Copilot SDK.',
+                pageDescription: 'Um workshop autoguiado para criar um agente curador de museu com o GitHub Copilot SDK para Node.js.',
                 skipLink: 'Pular para a lição',
                 openSections: 'Abrir seções',
                 closeSections: 'Fechar seções',
                 homeLabel: 'Página inicial do Copilot SDK Workshop',
                 actionsLabel: 'Ações da lição',
-                languageLabel: 'Linguagem',
-                languageAriaLabel: 'Linguagem de programação do workshop',
-                chooseLanguage: 'Escolha uma linguagem',
                 hub: '🏠 Início',
-                docs: '📚 Documentação ↗',
+                docs: '📚 Documentação do Node.js ↗',
                 previous: 'Anterior',
                 next: 'Próxima',
                 loading: 'Carregando',
@@ -193,11 +151,6 @@ System message: replace
                 optionalExtension: 'Extensão opcional',
                 preflight: 'Preparação',
                 stepOf: 'Etapa {number} de {count}',
-                docsFor: '📚 Documentação de {language} ↗',
-                chooseLanguagePageTitle: 'Escolha uma linguagem | Copilot SDK Workshop',
-                chooseLanguageHeading: 'Escolha a linguagem de programação',
-                chooseLanguageDetails: 'Selecione uma das seis linguagens disponíveis acima antes de carregar uma lição.',
-                chooseLanguageStatus: 'Escolha uma linguagem de programação para continuar.',
                 copy: 'Copiar',
                 copied: 'Copiado',
                 copyFailed: 'Falha ao copiar',
@@ -212,16 +165,6 @@ System message: replace
                 fallbackNotice: 'Esta lição ainda não está disponível em português. A versão em inglês será exibida.'
             }),
             steps: Object.freeze({
-                '00-preflight': Object.freeze({ title: 'Prepare sua máquina', navTitle: 'Preparação', time: 'Sem tempo definido' }),
-                '01-first-session': Object.freeze({ title: 'Crie sua primeira sessão do Copilot', navTitle: 'Primeira sessão' }),
-                '02-streaming': Object.freeze({ title: 'Transmita uma resposta', navTitle: 'Streaming' }),
-                '03-local-tool': Object.freeze({ title: 'Adicione conhecimento controlado pelo aplicativo', navTitle: 'Ferramenta local' }),
-                '04-mcp-safety': Object.freeze({ title: 'Conecte uma ferramenta externa com segurança', navTitle: 'MCP e permissões' }),
-                '05-combine-tools': Object.freeze({ title: 'Combine ferramentas locais e MCP', navTitle: 'Combine ferramentas' }),
-                '06-structured-report': Object.freeze({ title: 'Produza um relatório estruturado', navTitle: 'Relatório estruturado' }),
-                '07-run-explain': Object.freeze({ title: 'Execute e explique o aplicativo', navTitle: 'Execute e explique' }),
-                '08-model-selection': Object.freeze({ title: 'Selecione um modelo', navTitle: 'Seleção de modelo' }),
-                '09-interactive-html-report': Object.freeze({ title: 'Gere um relatório HTML interativo', navTitle: 'Relatório interativo' }),
                 'museum-00-preflight': Object.freeze({ title: 'Prepare o Museum Exhibit Studio', navTitle: 'Preparação', time: 'Sem tempo definido' }),
                 'museum-01-first-curator-session': Object.freeze({ title: 'Crie sua primeira sessão do curador', navTitle: 'Primeira sessão' }),
                 'museum-02-stream-the-curator': Object.freeze({ title: 'Exiba a resposta do curador em streaming', navTitle: 'Streaming' }),
@@ -231,49 +174,6 @@ System message: replace
                 'museum-06-prove-the-structure': Object.freeze({ title: 'Comprove a estrutura', navTitle: 'Verificações estruturais' }),
                 'museum-07-wikipedia-research': Object.freeze({ title: 'Pesquise com o MCP da Wikipedia', navTitle: 'Pesquisa na Wikipedia' }),
                 'museum-08-interactive-exhibit-page': Object.freeze({ title: 'Publique uma página interativa da exposição', navTitle: 'Página da exposição' })
-            }),
-            runtimeNotes: Object.freeze({
-                dotnet: 'Requer o .NET SDK e um runtime de C# compatível.',
-                go: 'Requer um toolchain Go compatível e um módulo Go.',
-                java: 'Requer um JDK compatível e um projeto Maven ou Gradle.',
-                nodejs: 'Requer uma versão LTS atual do Node.js.',
-                python: 'Requer Python e um ambiente virtual isolado.',
-                rust: 'Requer Rust e Cargo instalados via rustup.'
-            }),
-            nowChooseLanguage: 'Agora escolha uma linguagem para {workshop}.',
-            chooseWorkshopThenLanguage: 'Primeiro escolha um workshop. Depois, selecione a linguagem da implementação.',
-            workshopUsesSdk: '{workshop} usará o SDK para {language}.',
-            chooseWorkshopToContinue: 'Escolha um workshop para continuar.',
-            sdkDocsFor: 'Documentação do SDK para {language} ↗',
-            startWorkshop: 'Iniciar {workshop}',
-            workshops: Object.freeze({
-                sdlc: Object.freeze({
-                    name: 'Accessibility Reviewer',
-                    guidance: 'Crie uma ferramenta de SDLC para desenvolvedores em um workshop principal de 90 minutos.',
-                    preview: `URL → inspeção com Playwright
-    → consulta às WCAG
-    → relatório estruturado
-
-[ferramenta] playwright-browser_navigate
-[ferramenta] accessibility_rule_lookup
-
-Problema encontrado
-O campo de nome não tem um nome acessível.`
-                }),
-                museum: Object.freeze({
-                    name: 'Museum Exhibit Studio',
-                    guidance: 'Crie uma ferramenta de curadoria, fora do SDLC, em um workshop principal de 90 minutos.',
-                    preview: `Fatos aprovados → sessão do curador
-                → validação da exposição
-                → texto pronto para visitantes
-
-Ferramentas disponíveis: []
-Mensagem de sistema: replace
-
-# Viagem à Lua
-## Narrativa
-## Perguntas dos visitantes`
-                })
             })
         })
     });

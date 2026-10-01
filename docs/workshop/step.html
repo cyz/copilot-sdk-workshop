@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Self-guided, multilingual workshops for building agents with the GitHub Copilot SDK.">
-    <title>Copilot SDK Workshop</title>
+    <meta name="description" content="A self-guided workshop for building a museum curator agent with the GitHub Copilot SDK for Node.js.">
+    <title>Museum Exhibit Studio | Copilot SDK Workshop</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -15,9 +15,7 @@
     <link rel="stylesheet" href="../light-theme.css">
     <script src="../theme-toggle.js"></script>
     <script src="../localization.js"></script>
-    <script src="../language-registry.js"></script>
-    <script src="../language-navigation.js"></script>
-    <script src="../markdown-language-preprocessor.js"></script>
+    <script src="../navigation.js"></script>
 </head>
 <body>
     <a class="skip-link" id="skipLessonLink" href="#lessonContent">Skip to lesson</a>
@@ -34,28 +32,18 @@
 
             <a href="../index.html" class="header-brand" id="homeLink" aria-label="Copilot SDK Workshop home">
                 <span class="header-icon" aria-hidden="true">🤖</span>
-                <span class="header-title">Copilot SDK Workshop</span>
+                <span class="header-title">Museum Exhibit Studio</span>
                 <span class="visually-hidden" id="headerLessonTitle">Loading lesson</span>
             </a>
 
             <nav class="header-nav" id="headerNav" aria-label="Lesson actions">
-                <label class="language-select-label" id="languageSelectLabel" for="languageSelector">Language</label>
-                <select class="language-select" id="languageSelector" aria-label="Workshop language">
-                    <option id="chooseLanguageOption" value="">Choose language</option>
-                    <option value="dotnet">.NET</option>
-                    <option value="go">Go</option>
-                    <option value="java">Java</option>
-                    <option value="nodejs">Node.js</option>
-                    <option value="python">Python</option>
-                    <option value="rust">Rust</option>
-                </select>
                 <label class="visually-hidden" id="localeSelectLabel" for="localeSelector">Content language</label>
                 <select class="language-select locale-select" id="localeSelector" aria-label="Content language">
                     <option value="en">English</option>
                     <option value="pt-BR">Português (Brasil)</option>
                 </select>
                 <a href="../index.html" class="nav-btn" id="hubLink">🏠 Hub</a>
-                <a class="nav-btn" id="headerDocsLink" target="_blank" rel="noopener" hidden>📚 Docs ↗</a>
+                <a class="nav-btn" id="headerDocsLink" href="https://github.com/github/copilot-sdk/tree/main/nodejs" target="_blank" rel="noopener">📚 Node.js docs ↗</a>
                 <button class="theme-toggle" type="button" onclick="toggleTheme()">☀️ Light</button>
                 <a class="nav-btn" id="previousHeaderLink" href="#" hidden>← Prev</a>
                 <a class="nav-btn" id="nextHeaderLink" href="#" hidden>Next →</a>
@@ -88,7 +76,7 @@
             aria-labelledby="navigationTitle"
             tabindex="-1">
             <div class="flyout-header">
-                <span class="flyout-title" id="navigationTitle">🤖 Workshop Steps</span>
+                <span class="flyout-title" id="navigationTitle">Museum Exhibit Studio · Workshop steps</span>
                 <button
                     class="flyout-close"
                     id="closeNavigationButton"
@@ -112,97 +100,7 @@
     </div>
 
     <script>
-        const sdlcSteps = [
-            {
-                id: '00-preflight',
-                file: 'workshop/00-preflight.md',
-                title: 'Prepare your machine',
-                navTitle: 'Preflight',
-                kind: 'preflight',
-                time: 'Untimed'
-            },
-            {
-                id: '01-first-session',
-                file: 'workshop/01-first-session.md',
-                title: 'Create your first Copilot session',
-                navTitle: 'First session',
-                kind: 'core',
-                number: 1,
-                time: '10 min'
-            },
-            {
-                id: '02-streaming',
-                file: 'workshop/02-streaming.md',
-                title: 'Stream a response',
-                navTitle: 'Streaming',
-                kind: 'core',
-                number: 2,
-                time: '10 min'
-            },
-            {
-                id: '03-local-tool',
-                file: 'workshop/03-local-tool.md',
-                title: 'Add application-owned knowledge',
-                navTitle: 'Local tool',
-                kind: 'core',
-                number: 3,
-                time: '15 min'
-            },
-            {
-                id: '04-mcp-safety',
-                file: 'workshop/04-mcp-safety.md',
-                title: 'Connect an external tool safely',
-                navTitle: 'MCP and permissions',
-                kind: 'core',
-                number: 4,
-                time: '20 min'
-            },
-            {
-                id: '05-combine-tools',
-                file: 'workshop/05-combine-tools.md',
-                title: 'Combine local and MCP tools',
-                navTitle: 'Combine tools',
-                kind: 'core',
-                number: 5,
-                time: '15 min'
-            },
-            {
-                id: '06-structured-report',
-                file: 'workshop/06-structured-report.md',
-                title: 'Produce a structured report',
-                navTitle: 'Structured report',
-                kind: 'core',
-                number: 6,
-                time: '10 min'
-            },
-            {
-                id: '07-run-explain',
-                file: 'workshop/07-run-explain.md',
-                title: 'Run and explain the application',
-                navTitle: 'Run and explain',
-                kind: 'core',
-                number: 7,
-                time: '10 min'
-            },
-            {
-                id: '08-model-selection',
-                file: 'workshop/08-model-selection.md',
-                title: 'Select a model',
-                navTitle: 'Model selection',
-                kind: 'optional',
-                time: '10 min'
-            },
-            {
-                id: '09-interactive-html-report',
-                file: 'workshop/09-interactive-html-report.md',
-                title: 'Generate an interactive HTML report',
-                navTitle: 'Interactive report',
-                kind: 'optional',
-                time: '15 min'
-            }
-        ];
-
-        const museumSteps = [
+        const steps = [
             {
                 id: 'museum-00-preflight',
                 file: 'workshop/museum-00-preflight.md',
@@ -285,25 +183,9 @@
             }
         ];
 
-        const workshopTracks = {
-            sdlc: { title: 'Accessibility Reviewer', steps: sdlcSteps },
-            museum: { title: 'Museum Exhibit Studio', steps: museumSteps }
-        };
+        const workshopTitle = 'Museum Exhibit Studio';
 
         const legacyStepMap = {
-            '00-overview': '00-preflight',
-            '01-setup': '00-preflight',
-            '02-client': '01-first-session',
-            '03-streaming': '02-streaming',
-            '04-local-tools': '03-local-tool',
-            '05-interactive': '03-local-tool',
-            '06-browser-setup': '00-preflight',
-            '07-mcp-session': '04-mcp-safety',
-            '08-url-input': '05-combine-tools',
-            '09-tool-activity': '05-combine-tools',
-            '10-report-prompt': '06-structured-report',
-            '11-generate-tests': '07-run-explain',
-            '12-run-review': '07-run-explain',
             'museum-01-curator-role': 'museum-03-curator-voice',
             'museum-02-tool-free-session': 'museum-05-guardrails',
             'museum-03-approved-facts': 'museum-04-approved-facts',
@@ -314,18 +196,13 @@
         };
         const requestedStepParameter = new URLSearchParams(window.location.search).get('step');
         const mappedStepParameter = legacyStepMap[requestedStepParameter] ?? requestedStepParameter;
-        const activeWorkshopId = mappedStepParameter?.startsWith('museum-') ? 'museum' : 'sdlc';
-        const activeWorkshop = workshopTracks[activeWorkshopId];
-        const steps = activeWorkshop.steps;
 
         const menuButton = document.getElementById('menuButton');
         const navigationPanel = document.getElementById('navigationPanel');
         const navigationOverlay = document.getElementById('navigationOverlay');
         const closeNavigationButton = document.getElementById('closeNavigationButton');
         const compactNavigation = window.matchMedia('(max-width: 900px)');
-        const languageSelector = document.getElementById('languageSelector');
         const localeSelector = document.getElementById('localeSelector');
-        const storageKey = 'copilot-sdk-workshop.language';
         const localeStorageKey = 'copilot-sdk-workshop.locale';
         let currentLocale = WorkshopLocalization.resolveLocale(
             window.location.search,
@@ -366,13 +243,12 @@
             menuButton.setAttribute('aria-label', lessonMessages.openSections);
             document.getElementById('homeLink').setAttribute('aria-label', lessonMessages.homeLabel);
             document.getElementById('headerNav').setAttribute('aria-label', lessonMessages.actionsLabel);
-            document.getElementById('languageSelectLabel').textContent = lessonMessages.languageLabel;
-            languageSelector.setAttribute('aria-label', lessonMessages.languageAriaLabel);
-            document.getElementById('chooseLanguageOption').textContent = lessonMessages.chooseLanguage;
             document.getElementById('localeSelectLabel').textContent = messages.localeLabel;
             localeSelector.setAttribute('aria-label', messages.localeLabel);
             document.getElementById('hubLink').textContent = lessonMessages.hub;
             document.getElementById('headerDocsLink').textContent = lessonMessages.docs;
+            document.getElementById('homeLink').href = WorkshopNavigation.homeUrl(currentLocale.id);
+            document.getElementById('hubLink').href = WorkshopNavigation.homeUrl(currentLocale.id);
             document.getElementById('progressTrack').setAttribute('aria-label', lessonMessages.progressLabel);
             closeNavigationButton.setAttribute('aria-label', lessonMessages.closeSections);
             document.getElementById('workshopNavigation').setAttribute('aria-label', lessonMessages.workshopSteps);
@@ -395,7 +271,7 @@
         }
 
         function getSiteRootUrl() {
-            return WorkshopLanguageNavigation.siteRootUrl(window.location.href);
+            return WorkshopNavigation.siteRootUrl(window.location.href);
         }
 
         function getMarkdownUrl(file) {
@@ -412,53 +288,8 @@
                 : steps[0].id;
         }
 
-        function getStoredLanguageId() {
-            return getStoredValue(storageKey);
-        }
-
-        function storeLanguageId(languageId) {
-            storeValue(storageKey, languageId);
-        }
-
-        function getSelectedLanguage() {
-            return WorkshopLanguageNavigation.resolveLanguage(
-                window.location.search,
-                getStoredLanguageId(),
-                WorkshopLanguages.getLanguage
-            );
-        }
-
-        function homeUrl(language) {
-            return WorkshopLanguageNavigation.homeUrl(
-                language?.id,
-                activeWorkshopId,
-                currentLocale.id
-            );
-        }
-
-        function updateLanguageControls(language) {
-            languageSelector.value = language?.id ?? '';
-            const docsLink = document.getElementById('headerDocsLink');
-            docsLink.hidden = language === null;
-            if (language) {
-                docsLink.href = language.docsUrl;
-                docsLink.textContent = WorkshopLocalization.format(lessonMessages.docsFor, {
-                    language: language.displayName
-                });
-            } else {
-                docsLink.removeAttribute('href');
-            }
-            document.getElementById('homeLink').href = homeUrl(language);
-            document.getElementById('hubLink').href = homeUrl(language);
-        }
-
         function stepUrl(step) {
-            const language = getSelectedLanguage();
-            return WorkshopLanguageNavigation.lessonUrl(
-                step.id,
-                language?.id,
-                currentLocale.id
-            );
+            return WorkshopNavigation.lessonUrl(step.id, currentLocale.id);
         }
 
         function setNavigationOpen(open) {
@@ -613,17 +444,10 @@
         }
 
         function processMarkdown(markdown) {
-            const targetUrl = new URL('target-app/', getSiteRootUrl()).href;
-            return WorkshopMarkdown.preprocessLanguageDirectives(
-                markdown,
-                getSelectedLanguage()?.id,
-                WorkshopLanguages.getLanguage
-            )
-                .replaceAll('{{TARGET_APP_URL}}', targetUrl)
-                .replace(/\]\(([a-z0-9-]+)\.md\)/g, (match, stepId) => {
-                    const target = steps.find(step => step.id === stepId);
-                    return target ? `](${stepUrl(target)})` : match;
-                });
+            return markdown.replace(/\]\(([a-z0-9-]+)\.md\)/g, (match, stepId) => {
+                const target = steps.find(step => step.id === stepId);
+                return target ? `](${stepUrl(target)})` : match;
+            });
         }
 
         async function copyCode(button, codeBlock) {
@@ -792,36 +616,16 @@
             );
             storeValue(localeStorageKey, currentLocale.id);
             applyLocale();
-            const language = getSelectedLanguage();
             const stepId = getRequestedStepId();
             currentIndex = steps.findIndex(step => step.id === stepId);
             const step = localizedStep(steps[currentIndex]);
             const container = document.getElementById('markdownContent');
             const status = document.getElementById('lessonStatus');
 
-            updateLanguageControls(language);
-            document.querySelector('.header-title').textContent = activeWorkshop.title;
+            document.querySelector('.header-title').textContent = workshopTitle;
             document.getElementById('navigationTitle').textContent =
-                `${activeWorkshop.title} · ${lessonMessages.workshopSteps}`;
-            if (!language) {
-                document.title = lessonMessages.chooseLanguagePageTitle;
-                document.getElementById('headerLessonTitle').textContent = lessonMessages.chooseLanguage;
-                buildNavigation();
-                updatePagination();
-                const message = document.createElement('section');
-                message.className = 'load-error language-choice';
-                const heading = document.createElement('h1');
-                heading.textContent = lessonMessages.chooseLanguageHeading;
-                const details = document.createElement('p');
-                details.textContent = lessonMessages.chooseLanguageDetails;
-                message.append(heading, details);
-                container.replaceChildren(message);
-                container.setAttribute('aria-busy', 'false');
-                status.textContent = lessonMessages.chooseLanguageStatus;
-                return;
-            }
-
-            document.title = `${step.title} | ${language.displayName} | Copilot SDK Workshop`;
+                `${workshopTitle} · ${lessonMessages.workshopSteps}`;
+            document.title = `${step.title} | ${WorkshopNavigation.sdk.displayName} | Copilot SDK Workshop`;
             document.getElementById('headerLessonTitle').textContent = step.title;
             updateProgress(step);
             buildNavigation();
@@ -856,17 +660,6 @@
         closeNavigationButton.addEventListener('click', () => setNavigationOpen(false));
         navigationOverlay.addEventListener('click', () => setNavigationOpen(false));
         compactNavigation.addEventListener('change', () => setNavigationOpen(false));
-        languageSelector.addEventListener('change', () => {
-            const language = WorkshopLanguages.getLanguage(languageSelector.value);
-            if (!language) {
-                return;
-            }
-            storeLanguageId(language.id);
-            const url = new URL(window.location.href);
-            url.searchParams.set('lang', language.id);
-            window.history.replaceState({}, '', url);
-            loadStep();
-        });
         localeSelector.addEventListener('change', () => {
             currentLocale = WorkshopLocalization.getLocale(localeSelector.value);
             storeValue(localeStorageKey, currentLocale.id);

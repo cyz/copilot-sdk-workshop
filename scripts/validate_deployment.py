@@ -24,8 +24,8 @@ def public_paths() -> list[str]:
         if path.is_file() and "tests" not in path.relative_to(DOCS).parts
     )
     lessons = (
-        f"workshop/{path.name}"
-        for path in WORKSHOP.glob("*.md")
+        f"workshop/{path.relative_to(WORKSHOP).as_posix()}"
+        for path in WORKSHOP.rglob("*.md")
     )
     return ["", *sorted(site_files), *sorted(lessons)]
 

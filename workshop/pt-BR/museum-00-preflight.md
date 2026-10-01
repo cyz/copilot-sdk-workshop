@@ -12,8 +12,8 @@ o público:
 approved facts -> bounded prompt -> curator session -> structural checks -> human review
 ```
 
-Você constrói um único aplicativo de console, que cresce no próprio diretório
-`start-museum/<language>`. Cada etapa acrescenta uma ideia e termina com uma execução real, para
+Você constrói um único aplicativo de console em Node.js, que cresce no próprio diretório
+`start-museum/nodejs`. Cada etapa acrescenta uma ideia e termina com uma execução real, para
 que você veja o curador tomar forma passo a passo:
 
 | Etapa | Você adiciona | Você vê |
@@ -34,15 +34,32 @@ permissão de escrita restrita ao arquivo `exhibit.html` e pequenos prompts inte
 **Você nunca edita o módulo auxiliar.** Você escreve a configuração das sessões, as duas mensagens
 de sistema, os construtores de prompt, um executor de sessão e a função `main`.
 
-Você precisa do GitHub Copilot CLI autenticado, do runtime da sua linguagem e de um terminal. Você
-trabalha diretamente no projeto mínimo em `start-museum/<language>`, não no aplicativo finalizado. O
-projeto concluído em `finished/<language>/museum-exhibit-studio` serve apenas como referência
+Você trabalha diretamente no projeto mínimo em `start-museum/nodejs`, não no aplicativo finalizado.
+O projeto concluído em `finished/nodejs/museum-exhibit-studio` serve apenas como referência
 opcional.
 
 > **Sobre o idioma do código:** os trechos de código, os prompts enviados ao modelo e as mensagens
 > impressas pelo programa permanecem em inglês, exatamente como no projeto inicial e na referência
 > em `finished/`. Por isso, o curador também responde em inglês, e as saídas de exemplo destas
 > lições correspondem ao que você verá no terminal. Copie os blocos de código sem traduzi-los.
+
+## O que você precisa
+
+| Requisito | Por que o workshop precisa dele | Como verificar |
+|---|---|---|
+| [Node.js 22.12 ou mais recente](https://nodejs.org/) | Executa o aplicativo TypeScript e o servidor MCP da Wikipedia | `node --version` |
+| [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) | Instala o SDK fixado e as ferramentas de build, e executa o `npx` | `npm --version` |
+| [GitHub Copilot CLI](https://docs.github.com/en/copilot/how-tos/set-up/install-copilot-cli) | Faz o login no GitHub Copilot | `copilot --version` |
+| [Acesso ao GitHub Copilot](https://github.com/features/copilot) | Autoriza as solicitações ao Copilot | `copilot login` |
+
+Instale o Copilot CLI pelo método do
+[guia oficial de instalação](https://docs.github.com/en/copilot/how-tos/set-up/install-copilot-cli)
+e, em seguida, faça login e conclua o fluxo no navegador, para que as chamadas do SDK consigam
+acessar o GitHub Copilot:
+
+```bash
+copilot login
+```
 
 ## Clone o repositório do workshop
 
@@ -59,40 +76,15 @@ test "$(git rev-parse --show-toplevel)" = "$PWD"
 
 O comando deve terminar com sucesso, sem saída.
 
-Você constrói o aplicativo do museu **no próprio lugar**, dentro do diretório do projeto inicial da
-sua linguagem. Não há etapa de cópia. Isso significa que você edita arquivos versionados no
+Você constrói o aplicativo do museu **no próprio lugar**, dentro do diretório do projeto inicial
+Node.js. Não há etapa de cópia. Isso significa que você edita arquivos versionados no
 repositório, e por isso seu trabalho aparece em `git status` como arquivos modificados. Isso é
 esperado. Se quiser recomeçar a partir de um projeto inicial limpo, execute `git checkout -- .` na
 raiz do repositório para descartar suas alterações.
 
-Entre agora no diretório do projeto inicial da sua linguagem e permaneça nele para executar todos
-os comandos do workshop do museu.
-
-:::language dotnet
-Entre no projeto inicial .NET; em seguida, restaure, faça o build e execute seu ponto de entrada
-local:
-
-```bash
-cd start-museum/dotnet
-dotnet restore
-dotnet build --no-restore
-dotnet run --no-build
-```
-
-Critério de sucesso: o build passa e o programa imprime `=== Museum Exhibit Studio starter ===`
-seguido de `Pre-built curator helpers are ready in Helpers/.`
-
-Você trabalha em `start-museum/dotnet` pelo restante do workshop, então mantenha este terminal aqui.
-A partir desta pasta, digite `code .` para abri-la no VS Code, ou abra a pasta no seu editor
-preferido.
-
-Seu módulo auxiliar é `Helpers/Curator*.cs`, no namespace `MuseumExhibitStudio.Helpers`. Você
-escreverá todas as mudanças das lições em `Program.cs`.
-:::
-
-:::language nodejs
-Entre no projeto inicial Node.js. O lockfile fixa o SDK 1.0.11 e o pacote de plataforma compatível
-`@github/copilot` 1.0.80:
+Entre agora no projeto inicial Node.js e permaneça nele para executar todos os comandos do workshop
+do museu. O lockfile fixa o SDK 1.0.11 e o pacote de plataforma compatível `@github/copilot`
+1.0.80:
 
 ```bash
 cd start-museum/nodejs
@@ -110,96 +102,22 @@ de sua preferência.
 
 Seu módulo auxiliar é `src/curator.ts`. Todas as alterações das lições serão feitas em
 `src/index.ts`.
-:::
 
-:::language python
-Entre no projeto inicial Python, crie um ambiente virtual isolado e instale o SDK 1.0.11:
+<details>
+<summary>Solução de problemas da preparação</summary>
 
-```bash
-cd start-museum/python
-python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt
-.venv/bin/python -m py_compile *.py
-.venv/bin/python main.py
-```
+| Sintoma | Solução |
+|---|---|
+| `node` ou `npm` não é reconhecido | Instale o Node.js 22.12 ou mais recente e reinicie o terminal. |
+| Aviso de *engine* sobre a versão do Node.js | Atualize para o Node.js 22.12+; o projeto inicial declara `"node": ">=22.12.0"`. |
+| `npm ci` falha por causa do lockfile | Permaneça em `start-museum/nodejs` e mantenha o `package-lock.json`; não o apague. |
+| `copilot` não é reconhecido | Reinicie o terminal depois de instalar o Copilot CLI. |
+| O Copilot pede autenticação | Execute `copilot login`, conclua o fluxo no navegador e tente de novo. |
 
-No Windows, o interpretador fica em `.venv/Scripts/python.exe`.
+</details>
 
-Critério de sucesso: o código-fonte compila e o programa imprime
-`=== Museum Exhibit Studio starter ===` seguido de
-`Pre-built curator helpers are ready in curator.py.`
-
-Você trabalha em `start-museum/python` pelo restante do workshop, então mantenha este terminal aqui.
-A partir desta pasta, digite `code .` para abri-la no VS Code, ou abra a pasta no seu editor
-preferido.
-
-Seu módulo auxiliar é `curator.py`. Você escreverá todas as mudanças das lições em `main.py`.
-:::
-
-:::language go
-Entre no projeto inicial Go, baixe a dependência travada do SDK 1.0.11 e faça o build:
-
-```bash
-cd start-museum/go
-go mod download
-go build -mod=readonly ./...
-go run .
-```
-
-Critério de sucesso: o build passa e o programa imprime `=== Museum Exhibit Studio starter ===`
-seguido de `Pre-built curator helpers are ready in curator.go.`
-
-Você trabalha em `start-museum/go` pelo restante do workshop, então mantenha este terminal aqui. A
-partir desta pasta, digite `code .` para abri-la no VS Code, ou abra a pasta no seu editor
-preferido.
-
-Seu módulo auxiliar é `curator.go`, no mesmo pacote `main`. Você escreverá todas as mudanças das
-lições em `main.go`.
-:::
-
-:::language rust
-Entre no projeto inicial Rust, busque as dependências travadas e verifique o projeto:
-
-```bash
-cd start-museum/rust
-cargo fetch --locked
-cargo check --locked
-cargo run --locked
-```
-
-Critério de sucesso: o Cargo deixa `Cargo.lock` inalterado e o programa imprime
-`=== Museum Exhibit Studio starter ===` seguido de
-`Pre-built curator helpers are ready in src/lib.rs.`
-
-Você trabalha em `start-museum/rust` pelo restante do workshop, então mantenha este terminal aqui. A
-partir desta pasta, digite `code .` para abri-la no VS Code, ou abra a pasta no seu editor
-preferido.
-
-Seu módulo auxiliar é o crate de biblioteca `museum_exhibit_studio` em `src/lib.rs`. Você escreverá
-todas as mudanças das lições em `src/main.rs`.
-:::
-
-:::language java
-Entre no projeto inicial Maven, resolva o SDK 1.0.11, compile e execute:
-
-```bash
-cd start-museum/java
-mvn dependency:go-offline
-mvn compile
-mvn exec:java
-```
-
-Critério de sucesso: o Maven termina com sucesso e o programa imprime
-`=== Museum Exhibit Studio starter ===` seguido de
-`Pre-built curator helpers are ready in src/main/java/workshop/.`
-
-Você trabalha em `start-museum/java` pelo restante do workshop, então mantenha este terminal aqui. A
-partir desta pasta, digite `code .` para abri-la no VS Code, ou abra a pasta no seu editor
-preferido.
-
-Seu módulo auxiliar é `src/main/java/workshop/Curator*.java`. Você escreverá todas as mudanças das
-lições em `src/main/java/workshop/MuseumExhibitStudio.java`.
-:::
+> **Comece a Etapa 1 quando:** `npm run build` passar, `npm start` imprimir o banner do projeto
+> inicial e o `copilot login` estiver concluído.
 
 ## Estabeleça o limite de confiança
 
@@ -228,35 +146,7 @@ páginas abertas enquanto você avança (todas em inglês):
   como o SDK localiza e inicia o Copilot CLI e como apontá-lo para outro binário.
 - [Guia de depuração](https://github.com/github/copilot-sdk/blob/main/docs/troubleshooting/debugging.md):
   o primeiro lugar a consultar quando uma execução falha antes de produzir qualquer saída.
-
-:::language dotnet
-- [Referência do SDK .NET](https://github.com/github/copilot-sdk/blob/main/dotnet/README.md):
-  instalação do pacote e um exemplo mínimo para o SDK .NET.
-:::
-
-:::language nodejs
 - [Referência do SDK Node.js](https://github.com/github/copilot-sdk/blob/main/nodejs/README.md):
   instalação do pacote e um exemplo mínimo para o SDK Node.js.
-:::
-
-:::language python
-- [Referência do SDK Python](https://github.com/github/copilot-sdk/blob/main/python/README.md):
-  instalação do pacote e um exemplo mínimo para o SDK Python.
-:::
-
-:::language go
-- [Referência do SDK Go](https://github.com/github/copilot-sdk/blob/main/go/README.md):
-  instalação do módulo e um exemplo mínimo para o SDK Go.
-:::
-
-:::language rust
-- [Referência do SDK Rust](https://github.com/github/copilot-sdk/blob/main/rust/README.md):
-  instalação do crate e um exemplo mínimo para o SDK Rust.
-:::
-
-:::language java
-- [Referência do SDK Java](https://github.com/github/copilot-sdk/blob/main/java/README.md):
-  coordenadas da dependência e um exemplo mínimo para o SDK Java.
-:::
 
 Continue para a [Etapa 1: Crie sua primeira sessão do curador](museum-01-first-curator-session.md).

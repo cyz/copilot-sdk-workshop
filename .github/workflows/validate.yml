@@ -27,115 +27,22 @@ jobs:
       - name: Validate lessons and site behavior
         run: bash scripts/validate-workshop.sh content
 
-  smoke-build:
-    name: ${{ matrix.name }}
+  nodejs:
+    name: Node.js / TypeScript build
     runs-on: ubuntu-latest
-    env:
-      CARGO_TARGET_DIR: ${{ github.workspace }}/.cargo-target
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - language: dotnet
-            name: .NET smoke build
-          - language: nodejs
-            name: Node.js / TypeScript smoke build
-          - language: python
-            name: Python smoke build
-          - language: go
-            name: Go smoke build
-          - language: rust
-            name: Rust smoke build
-          - language: java
-            name: Java smoke build
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
-        if: matrix.language == 'dotnet'
-        with:
-          dotnet-version: 10.0.x
-
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        if: matrix.language == 'nodejs'
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: |
-            start-accessibility/nodejs/package-lock.json
             start-museum/nodejs/package-lock.json
-            finished/nodejs/*/package-lock.json
+            finished/nodejs/museum-exhibit-studio/package-lock.json
 
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        if: matrix.language == 'python'
-        with:
-          python-version: "3.11"
-          cache: pip
-          cache-dependency-path: |
-            start-accessibility/python/requirements.txt
-            start-museum/python/requirements.txt
-            finished/python/*/requirements.txt
+      - name: Build starter and finished app
+        run: bash scripts/validate-workshop.sh nodejs
 
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        if: matrix.language == 'go'
-        with:
-          go-version: "1.24.x"
-          cache-dependency-path: |
-            start-accessibility/go/go.sum
-            start-museum/go/go.sum
-            finished/go/*/go.sum
-
-      - uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87 # stable
-        if: matrix.language == 'rust'
-        with:
-          toolchain: "1.94.0"
-
-      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
-        if: matrix.language == 'rust'
-        with:
-          workspaces: |
-            start-accessibility/rust -> ../../.cargo-target
-            start-museum/rust -> ../../.cargo-target
-            finished/rust/accessibility-report -> ../../../.cargo-target
-            finished/rust/hello-copilot-sdk -> ../../../.cargo-target
-            finished/rust/museum-exhibit-studio -> ../../../.cargo-target
-
-      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
-        if: matrix.language == 'java'
-        with:
-          distribution: temurin
-          java-version: "17"
-          cache: maven
-
-      - name: Verify Maven
-        if: matrix.language == 'java'
-        run: mvn --version
-
-      - name: Build ${{ matrix.name }}
-        run: bash scripts/validate-workshop.sh "${{ matrix.language }}"
-
-  macos-portability:
-    name: macOS portable validation
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
-        with:
-          dotnet-version: 10.0.x
-
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version: "3.11"
-
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        with:
-          go-version: "1.24.x"
-
-      - name: Validate with macOS system Bash
-        run: |
-          /bin/bash --version
-          /bin/bash scripts/validate-workshop.sh dotnet
-          /bin/bash scripts/validate-workshop.sh python
-          /bin/bash scripts/validate-workshop.sh go
-          test -z "$(git status --porcelain --untracked-files=all)"
+      - name: Builds leave the repository clean
+        run: test -z "$(git status --porcelain --untracked-files=all)"

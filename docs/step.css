@@ -841,12 +841,6 @@ button {
     gap: 0.5rem;
 }
 
-.language-select-label {
-    color: var(--text-secondary);
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-
 .language-select {
     max-width: 8.5rem;
     padding: 0.42rem 0.5rem;
@@ -1196,7 +1190,6 @@ button {
     .header-title,
     .header-nav > a[href="../index.html"],
     #headerDocsLink,
-    .language-select-label,
     #previousHeaderLink {
         display: none !important;
     }

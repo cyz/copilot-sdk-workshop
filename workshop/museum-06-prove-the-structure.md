@@ -32,34 +32,6 @@ what it does not cover — is the lesson.
 
 ## Wire the validator
 
-:::language dotnet
-Open `Program.cs`. Capture the returned exhibit and print the report:
-
-```csharp
-    Console.WriteLine();
-    var exhibit = await RunSessionAsync(
-        GenerationConfig(approvedFacts),
-        BuildExhibitPrompt(),
-        CuratorStreamer.GenerationTimeout);
-
-    Console.WriteLine();
-    Console.WriteLine(CuratorValidation.FormatValidation(CuratorValidation.ValidateExhibit(exhibit)));
-
-    return 0;
-```
-
-`CuratorValidation` is already in the `MuseumExhibitStudio.Helpers` namespace you imported in
-Step 2, so there is nothing new to add at the top of the file.
-
-**Look inside:** `Helpers/CuratorValidation.cs` is the concrete answer to "the application proves
-this, not the model". `ValidateExhibit` splits the text into lines, counts `TitlePattern` matches,
-locates the `## Narrative` and `## Visitor questions` headings, counts narrative words with
-`WordPattern`, collects numbered items with `QuestionPattern`, and scans the whole text for the
-five terms in `ProhibitedVocabulary`. Each failed rule appends a plain sentence to `Errors`, and
-`FormatValidation` renders those into the report you print. No model is involved at any point.
-:::
-
-:::language nodejs
 Open `src/index.ts`. Add `formatValidation` and `validateExhibit` to the helper
 import:
 
@@ -100,144 +72,12 @@ model". `validateExhibit` splits the text into lines, counts `titlePattern` matc
 collects numbered items with `questionPattern`, and scans the whole text for the five terms in
 `prohibitedVocabulary`. Each failed rule appends a plain sentence to `errors`, and
 `formatValidation` renders those into the report you print. No model is involved at any point.
-:::
-
-:::language python
-Open `main.py`. Add `format_validation` and `validate_exhibit` to the helper
-import, then capture the returned exhibit and print the report:
-
-```python
-    try:
-        print()
-        exhibit = await run_session(
-            generation_config(facts),
-            build_exhibit_prompt(),
-            GENERATION_TIMEOUT_SECONDS,
-        )
-
-        print()
-        print(format_validation(validate_exhibit(exhibit)))
-        return 0
-```
-
-**Look inside:** `curator.py` is the concrete answer to "the application proves this, not the
-model". `validate_exhibit` splits the text into lines, counts `_TITLE_PATTERN` matches, locates the
-`## Narrative` and `## Visitor questions` headings, counts narrative words with `_WORD_PATTERN`,
-collects numbered items with `_QUESTION_PATTERN`, and scans the whole text for the five terms in
-`PROHIBITED_VOCABULARY`. Each failed rule appends a plain sentence to `errors`, and
-`format_validation` renders those into the report you print. No model is involved at any point.
-:::
-
-:::language go
-Open `main.go`. Capture the returned exhibit and print the report:
-
-```go
-	fmt.Println()
-	exhibit, err := runSession(ctx, exhibitConfig, buildExhibitPrompt(), GenerationTimeout)
-	if err != nil {
-		return err
-	}
-
-	fmt.Println()
-	fmt.Println(FormatValidation(ValidateExhibit(exhibit)))
-	return nil
-```
-
-`FormatValidation` and `ValidateExhibit` live in `curator.go` in the same package, so there is no
-import to add.
-
-**Look inside:** `curator.go` is the concrete answer to "the application proves this, not the
-model". `ValidateExhibit` splits the text into lines, counts title-pattern matches, locates the
-`## Narrative` and `## Visitor questions` headings, counts narrative words, collects numbered
-items, and scans the lowercased text for the five terms in `prohibitedVocabulary`. Each failed rule
-appends a plain sentence to `validation.Errors`, and `FormatValidation` renders those into the
-report you print. No model is involved at any point.
-:::
-
-:::language rust
-Open `src/main.rs`. Add `format_validation` and `validate_exhibit` to the crate
-import, then capture the returned exhibit and print the report:
-
-```rust
-    println!();
-    let exhibit = run_session(
-        generation_config(&facts)?,
-        build_exhibit_prompt(),
-        GENERATION_TIMEOUT,
-    )
-    .await?;
-
-    println!();
-    println!("{}", format_validation(&validate_exhibit(&exhibit)));
-
-    Ok(())
-```
-
-**Look inside:** `src/lib.rs` is the concrete answer to "the application proves this, not the
-model". `validate_exhibit` splits the text into lines, counts title-pattern matches, locates the
-`## Narrative` and `## Visitor questions` headings, counts narrative words, collects numbered
-items, and scans the lowercased text for the five terms in `PROHIBITED_VOCABULARY`. Each failed
-rule pushes a plain sentence onto `errors`, and `format_validation` renders those into the report
-you print. No model is involved at any point.
-:::
-
-:::language java
-Open `src/main/java/workshop/MuseumExhibitStudio.java`. Capture the returned
-exhibit and print the report:
-
-```java
-            System.out.println();
-            String exhibit = runSession(
-                    generationConfig(facts),
-                    buildExhibitPrompt(),
-                    CuratorStreamer.GENERATION_TIMEOUT);
-
-            System.out.println();
-            System.out.println(CuratorValidation.formatValidation(CuratorValidation.validateExhibit(exhibit)));
-```
-
-`CuratorValidation` sits in the same `workshop` package, so there is no import to add.
-
-**Look inside:** `CuratorValidation.java` is the concrete answer to "the application proves this,
-not the model". `validateExhibit` splits the text into lines, counts `TITLE_PATTERN` matches,
-locates the `## Narrative` and `## Visitor questions` headings, counts narrative words with
-`WORD_PATTERN`, collects numbered items with `QUESTION_PATTERN`, and scans the lowercased text for
-the five terms in `PROHIBITED_VOCABULARY`. Each failed rule adds a plain sentence to `errors`, and
-`formatValidation` renders those into the report you print. No model is involved at any point.
-:::
 
 ## Run it
 
-:::language dotnet
-```bash
-dotnet run
-```
-:::
-:::language nodejs
 ```bash
 npm start
 ```
-:::
-:::language python
-```bash
-.venv/bin/python main.py
-```
-:::
-:::language go
-```bash
-go run .
-```
-:::
-:::language rust
-```bash
-cargo run
-```
-:::
-:::language java
-```bash
-mvn compile exec:java
-```
-:::
 
 The exhibit streams as before, and then a verdict appears under it:
 

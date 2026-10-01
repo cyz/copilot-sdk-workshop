@@ -33,35 +33,6 @@ saber exatamente o que ele não cobre.
 
 ## Conecte o validador
 
-:::language dotnet
-Abra `Program.cs`. Capture a exposição retornada e imprima o relatório:
-
-```csharp
-    Console.WriteLine();
-    var exhibit = await RunSessionAsync(
-        GenerationConfig(approvedFacts),
-        BuildExhibitPrompt(),
-        CuratorStreamer.GenerationTimeout);
-
-    Console.WriteLine();
-    Console.WriteLine(CuratorValidation.FormatValidation(CuratorValidation.ValidateExhibit(exhibit)));
-
-    return 0;
-```
-
-`CuratorValidation` já está no namespace `MuseumExhibitStudio.Helpers` que você importou na
-Etapa 2, então não há nada novo para adicionar no início do arquivo.
-
-**Confira no código:** `Helpers/CuratorValidation.cs` é a resposta concreta para "o aplicativo
-comprova isto, não o modelo". `ValidateExhibit` divide o texto em linhas, conta correspondências de
-`TitlePattern`, localiza os títulos `## Narrative` e `## Visitor questions`, conta palavras da
-narrativa com `WordPattern`, coleta itens numerados com `QuestionPattern` e varre o texto inteiro
-em busca dos cinco termos em `ProhibitedVocabulary`. Cada regra que falha acrescenta uma frase
-simples a `Errors`, e `FormatValidation` renderiza isso no relatório que você imprime. Nenhum
-modelo participa em momento algum.
-:::
-
-:::language nodejs
 Abra `src/index.ts` e adicione `formatValidation` e `validateExhibit` à importação de
 `./curator.js`:
 
@@ -105,147 +76,12 @@ narrativa com `wordPattern`, coleta os itens numerados com `questionPattern` e p
 inteiro os cinco termos de `prohibitedVocabulary`. Cada regra que falha acrescenta uma frase simples
 a `errors`, e `formatValidation` transforma isso no relatório que você imprime. Nenhum modelo
 participa em momento algum.
-:::
-
-:::language python
-Abra `main.py`. Adicione `format_validation` e `validate_exhibit` à importação do módulo auxiliar,
-depois capture a exposição retornada e imprima o relatório:
-
-```python
-    try:
-        print()
-        exhibit = await run_session(
-            generation_config(facts),
-            build_exhibit_prompt(),
-            GENERATION_TIMEOUT_SECONDS,
-        )
-
-        print()
-        print(format_validation(validate_exhibit(exhibit)))
-        return 0
-```
-
-**Confira no código:** `curator.py` é a resposta concreta para "o aplicativo comprova isto, não o
-modelo". `validate_exhibit` divide o texto em linhas, conta correspondências de `_TITLE_PATTERN`,
-localiza os títulos `## Narrative` e `## Visitor questions`, conta palavras da narrativa com
-`_WORD_PATTERN`, coleta itens numerados com `_QUESTION_PATTERN` e varre o texto inteiro em busca
-dos cinco termos em `PROHIBITED_VOCABULARY`. Cada regra que falha acrescenta uma frase simples a
-`errors`, e `format_validation` renderiza isso no relatório que você imprime. Nenhum modelo
-participa em momento algum.
-:::
-
-:::language go
-Abra `main.go`. Capture a exposição retornada e imprima o relatório:
-
-```go
-	fmt.Println()
-	exhibit, err := runSession(ctx, exhibitConfig, buildExhibitPrompt(), GenerationTimeout)
-	if err != nil {
-		return err
-	}
-
-	fmt.Println()
-	fmt.Println(FormatValidation(ValidateExhibit(exhibit)))
-	return nil
-```
-
-`FormatValidation` e `ValidateExhibit` ficam em `curator.go`, no mesmo pacote, então não há import
-para adicionar.
-
-**Confira no código:** `curator.go` é a resposta concreta para "o aplicativo comprova isto, não o
-modelo". `ValidateExhibit` divide o texto em linhas, conta correspondências do padrão de título,
-localiza os títulos `## Narrative` e `## Visitor questions`, conta palavras da narrativa, coleta
-itens numerados e varre o texto em minúsculas em busca dos cinco termos em `prohibitedVocabulary`.
-Cada regra que falha acrescenta uma frase simples a `validation.Errors`, e `FormatValidation`
-renderiza isso no relatório que você imprime. Nenhum modelo participa em momento algum.
-:::
-
-:::language rust
-Abra `src/main.rs`. Adicione `format_validation` e `validate_exhibit` à importação da crate,
-depois capture a exposição retornada e imprima o relatório:
-
-```rust
-    println!();
-    let exhibit = run_session(
-        generation_config(&facts)?,
-        build_exhibit_prompt(),
-        GENERATION_TIMEOUT,
-    )
-    .await?;
-
-    println!();
-    println!("{}", format_validation(&validate_exhibit(&exhibit)));
-
-    Ok(())
-```
-
-**Confira no código:** `src/lib.rs` é a resposta concreta para "o aplicativo comprova isto, não o
-modelo". `validate_exhibit` divide o texto em linhas, conta correspondências do padrão de título,
-localiza os títulos `## Narrative` e `## Visitor questions`, conta palavras da narrativa, coleta
-itens numerados e varre o texto em minúsculas em busca dos cinco termos em
-`PROHIBITED_VOCABULARY`. Cada regra que falha insere uma frase simples em `errors`, e
-`format_validation` renderiza isso no relatório que você imprime. Nenhum modelo participa em
-momento algum.
-:::
-
-:::language java
-Abra `src/main/java/workshop/MuseumExhibitStudio.java`. Capture a exposição retornada e imprima o
-relatório:
-
-```java
-            System.out.println();
-            String exhibit = runSession(
-                    generationConfig(facts),
-                    buildExhibitPrompt(),
-                    CuratorStreamer.GENERATION_TIMEOUT);
-
-            System.out.println();
-            System.out.println(CuratorValidation.formatValidation(CuratorValidation.validateExhibit(exhibit)));
-```
-
-`CuratorValidation` fica no mesmo pacote `workshop`, então não há import para adicionar.
-
-**Confira no código:** `CuratorValidation.java` é a resposta concreta para "o aplicativo comprova
-isto, não o modelo". `validateExhibit` divide o texto em linhas, conta correspondências de
-`TITLE_PATTERN`, localiza os títulos `## Narrative` e `## Visitor questions`, conta palavras da
-narrativa com `WORD_PATTERN`, coleta itens numerados com `QUESTION_PATTERN` e varre o texto em
-minúsculas em busca dos cinco termos em `PROHIBITED_VOCABULARY`. Cada regra que falha acrescenta
-uma frase simples a `errors`, e `formatValidation` renderiza isso no relatório que você imprime.
-Nenhum modelo participa em momento algum.
-:::
 
 ## Execute
 
-:::language dotnet
-```bash
-dotnet run
-```
-:::
-:::language nodejs
 ```bash
 npm start
 ```
-:::
-:::language python
-```bash
-.venv/bin/python main.py
-```
-:::
-:::language go
-```bash
-go run .
-```
-:::
-:::language rust
-```bash
-cargo run
-```
-:::
-:::language java
-```bash
-mvn compile exec:java
-```
-:::
 
 A exposição aparece em streaming como antes e, em seguida, um veredicto é impresso logo abaixo:
 
