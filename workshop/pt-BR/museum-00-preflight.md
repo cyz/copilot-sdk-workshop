@@ -93,8 +93,8 @@ npm run build
 npm start
 ```
 
-Critério de sucesso: o build passa e o programa imprime `=== Museum Exhibit Studio starter ===`
-seguido de `Pre-built curator helpers are ready in src/curator.ts.`
+Critério de sucesso: o build passa e o programa imprime `=== Estúdio de Exposições de Museu (projeto inicial) ===`
+seguido de `Os auxiliares do curador pré-construídos estão prontos em src/curator.ts.`
 
 Você vai trabalhar em `start-museum/nodejs` até o fim do workshop, então mantenha este terminal
 nesse diretório. A partir dele, execute `code .` para abrir a pasta no VS Code ou abra-a no editor

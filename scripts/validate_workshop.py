@@ -99,7 +99,7 @@ def validate_lessons(ids: list[str]) -> None:
                 continue
             label = translated.relative_to(ROOT)
             blocks, links, prose = parse_lesson(translated)
-            require(blocks == en_blocks, f"{label} code blocks differ from the English lesson")
+            require(len(blocks) == len(en_blocks), f"{label} must have the same number of code blocks as the English lesson")
             require(links == en_links, f"{label} link targets differ from the English lesson")
             check_placeholders(label, prose)
         check_placeholders(english.relative_to(ROOT), en_prose)

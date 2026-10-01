@@ -44,7 +44,7 @@ Abra `src/index.ts` e **substitua o arquivo inteiro**:
 import { approveAll, CopilotClient } from "@github/copilot-sdk";
 
 async function main(): Promise<void> {
-  console.log("=== Museum Exhibit Studio ===");
+  console.log("=== Estúdio de Exposições de Museu ===");
   console.log();
 
   const client = new CopilotClient();
@@ -55,7 +55,7 @@ async function main(): Promise<void> {
   });
 
   const response = await session.sendAndWait({
-    prompt: "Write two sentences of museum wall text about the Apollo 11 Moon landing.",
+    prompt: "Escreva duas frases de texto de parede de museu sobre o pouso da Apollo 11 na Lua.",
   });
   console.log(response?.data && "content" in response.data ? response.data.content : response);
 
@@ -81,10 +81,10 @@ npm start
 O texto exato vai variar, mas a saída tem este formato:
 
 ```text
-=== Museum Exhibit Studio ===
+=== Estúdio de Exposições de Museu ===
 
-The Apollo 11 mission carried three astronauts toward the Moon in July 1969. Days later,
-two of them stepped onto its surface while the world listened.
+A missão Apollo 11 levou três astronautas rumo à Lua em julho de 1969. Dias depois,
+dois deles pisaram em sua superfície enquanto o mundo ouvia.
 ```
 
 Duas frases com cara de texto de museu aparecem depois de uma breve pausa. Ainda não há streaming,

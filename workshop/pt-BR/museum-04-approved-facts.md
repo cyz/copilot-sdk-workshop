@@ -78,27 +78,27 @@ conjunto de fatos:
 
 ```typescript
 function buildExhibitPrompt(): string {
-  return `Create visitor-facing exhibit text about this application's approved subject.
+  return `Crie um texto de exposição voltado aos visitantes sobre o assunto aprovado deste aplicativo.
 
-Call ${approvedFactLookupName} first. Use only the facts it returns, and treat them as the
-complete source of truth for this exhibit.
+Chame primeiro ${approvedFactLookupName}. Use apenas os fatos que ela retornar e trate-os como a
+fonte de verdade completa para esta exposição.
 
-Return exactly this structure:
+Retorne exatamente esta estrutura:
 
-# <an engaging exhibit title>
+# <um título envolvente para a exposição>
 ## Narrative
-<100-140 words, excluding the title and questions>
+<100 a 140 palavras, sem contar o título e as perguntas>
 ## Visitor questions
-1. <question>
-2. <question>
-3. <question>
+1. <pergunta>
+2. <pergunta>
+3. <pergunta>
 
-Write exactly three distinct visitor reflection questions. Do not add a preface,
-conclusion, software discussion, or facts the tool did not return.`;
+Escreva exatamente três perguntas de reflexão distintas para os visitantes. Não adicione prefácio,
+conclusão, discussão sobre software nem fatos que a ferramenta não retornou.`;
 }
 
 async function chooseFactSet(): Promise<(typeof factSets)[number]> {
-  const answer = await askLine("Choose a fact set [1-3, default 1]: ");
+  const answer = await askLine("Escolha um conjunto de fatos [1-3, padrão 1]: ");
   const choice = Number.parseInt(answer, 10);
   if (Number.isInteger(choice) && choice >= 1 && choice <= factSets.length) {
     return factSets[choice - 1] ?? factSets[0];
@@ -107,13 +107,17 @@ async function chooseFactSet(): Promise<(typeof factSets)[number]> {
 }
 ```
 
+Os títulos `## Narrative` e `## Visitor questions` ficam em inglês de propósito: o validador da
+Etapa 6 procura exatamente esses marcadores, então o texto ao redor pode estar em português, mas os
+títulos não devem ser traduzidos.
+
 Substitua `main` por:
 
 ```typescript
 async function main(): Promise<void> {
-  console.log("=== Museum Exhibit Studio ===");
+  console.log("=== Estúdio de Exposições de Museu ===");
   console.log();
-  console.log("Approved fact sets:");
+  console.log("Conjuntos de fatos aprovados:");
   factSets.forEach((factSet, index) => console.log(`${index + 1}. ${factSet.label}`));
   console.log();
 
@@ -122,7 +126,7 @@ async function main(): Promise<void> {
   approvedFacts.forEach((fact, index) => console.log(`${index + 1}. ${fact}`));
   console.log();
 
-  if (!(await askYesNo("Use these facts?", true))) {
+  if (!(await askYesNo("Usar estes fatos?", true))) {
     approvedFacts = boundFacts(await readFacts());
   }
 
@@ -169,28 +173,28 @@ Agora o aplicativo faz algumas perguntas antes de escrever qualquer coisa, e voc
 buscar os fatos antes de escrever a primeira palavra:
 
 ```text
-=== Museum Exhibit Studio ===
+=== Estúdio de Exposições de Museu ===
 
-Approved fact sets:
+Conjuntos de fatos aprovados:
 1. Apollo 11
-2. Great Barrier Reef
-3. Terracotta Army
+2. Grande Barreira de Corais
+3. Exército de Terracota
 
-Choose a fact set [1-3, default 1]: 2
-1. The Great Barrier Reef lies off the coast of Queensland, Australia.
-2. It stretches for about 2,300 kilometres.
-3. It is made up of more than 2,900 individual reefs.
-4. It was added to the UNESCO World Heritage List in 1981.
-5. Rising sea temperatures have caused repeated coral bleaching events.
+Escolha um conjunto de fatos [1-3, padrão 1]: 2
+1. A Grande Barreira de Corais fica na costa de Queensland, na Austrália.
+2. Ela se estende por cerca de 2.300 quilômetros.
+3. É formada por mais de 2.900 recifes individuais.
+4. Foi incluída na Lista do Patrimônio Mundial da UNESCO em 1981.
+5. O aumento da temperatura do mar causou repetidos eventos de branqueamento de corais.
 
-Use these facts? [Y/n]: y
+Usar estes fatos? [Y/n]: y
 
 [tool:start] approved_fact_lookup
 [tool:done] success=true
 
-# A Reef the Size of a Country
+# Um recife do tamanho de um país
 ## Narrative
-Off the Queensland coast, more than two thousand nine hundred reefs...
+Na costa de Queensland, mais de duas mil e novecentas formações de recife...
 ## Visitor questions
 1. ...
 ```
@@ -211,7 +215,7 @@ curador passa a escrever sobre o seu assunto — os fatos que você digitou entr
 ferramenta os entregou ao modelo.
 
 Teste também o caso de falha. Responda `n` e envie imediatamente uma linha em branco, sem digitar
-nenhum fato. A execução para com `Provide at least one approved fact.` — a factory da ferramenta se
+nenhum fato. A execução para com `Informe pelo menos um fato aprovado.` — a factory da ferramenta se
 recusou a criá-la com uma lista vazia, então nenhuma solicitação chegou a ser enviada. A Etapa 5
 transforma essa falha abrupta em uma mensagem de erro clara.
 
@@ -219,7 +223,7 @@ transforma essa falha abrupta em uma mensagem de erro clara.
 
 - Você registrou a ferramenta em dois lugares. O que aconteceria se você colocasse
   `approved_fact_lookup` em `tools`, mas a deixasse fora da lista de permissões?
-- O prompt diz "Call `approved_fact_lookup` first." Essa frase garante que a chamada aconteça? O
+- O prompt diz "Chame `approved_fact_lookup` primeiro." Essa frase garante que a chamada aconteça? O
   que, nesta etapa, tornou a ferramenta *disponível* para ser chamada?
 - A ferramenta não recebe argumentos e sempre retorna a mesma lista limitada para um mesmo conjunto
   de fatos. O que você perderia se ela aceitasse um argumento de consulta em texto livre?

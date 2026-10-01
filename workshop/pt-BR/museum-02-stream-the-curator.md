@@ -34,7 +34,7 @@ import { approveAll, CopilotClient } from "@github/copilot-sdk";
 import { streamExhibit } from "./curator.js";
 
 async function main(): Promise<void> {
-  console.log("=== Museum Exhibit Studio ===");
+  console.log("=== Estúdio de Exposições de Museu ===");
   console.log();
 
   const client = new CopilotClient();
@@ -47,7 +47,7 @@ async function main(): Promise<void> {
 
   await streamExhibit(
     session,
-    "Write two sentences of museum wall text about the Apollo 11 Moon landing.",
+    "Escreva duas frases de texto de parede de museu sobre o pouso da Apollo 11 na Lua.",
   );
 
   await session.disconnect();
@@ -78,9 +78,9 @@ npm start
 Aparece o mesmo tipo de resposta, mas desta vez você a vê sendo escrita:
 
 ```text
-=== Museum Exhibit Studio ===
+=== Estúdio de Exposições de Museu ===
 
-In July 1969, three astronauts left Earth aboard Apollo 11... 
+Em julho de 1969, três astronautas deixaram a Terra a bordo da Apollo 11...
 ```
 
 O texto vai crescendo na tela, em vez de aparecer de uma vez, e o programa termina logo depois da

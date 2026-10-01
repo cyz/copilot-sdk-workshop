@@ -91,8 +91,9 @@ The learner-facing track begins at
 [`workshop/museum-00-preflight.md`](workshop/museum-00-preflight.md), then runs through seven core
 steps — first session, streaming, curator voice, approved facts, guardrails, structural checks, and
 Wikipedia MCP research — plus an optional interactive `exhibit.html` capstone. Brazilian Portuguese
-lessons live in [`workshop/pt-BR/`](workshop/pt-BR/); code, prompts, and program output stay in
-English in both languages.
+lessons live in [`workshop/pt-BR/`](workshop/pt-BR/); there, the prompts and user-facing messages
+are shown in Portuguese, while the code structure and the `## Narrative`, `## Visitor questions`, and
+`## Sources` headings that the helper module parses stay in English.
 
 ## Deployment
 

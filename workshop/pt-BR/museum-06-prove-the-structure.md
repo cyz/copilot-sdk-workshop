@@ -25,7 +25,7 @@ sustenta. O relatório termina dizendo exatamente isso, e essa frase marca o lim
 aplicativo:
 
 ```text
-Structural checks do not prove factual grounding. Unsupported claims require human review or a separate evaluator.
+As verificações estruturais não comprovam a fundamentação factual. Afirmações sem respaldo exigem revisão humana ou um avaliador separado.
 ```
 
 Você não vai escrever o validador. A lição é aprender a *reagir* a um veredicto automático — e
@@ -86,33 +86,33 @@ npm start
 A exposição aparece em streaming como antes e, em seguida, um veredicto é impresso logo abaixo:
 
 ```text
-Structural checks passed.
-- One level-one title: true
-- Narrative section: true
-- Narrative length: 126 words (within 100-140: true)
-- Visitor questions section: true
-- Numbered questions: 3 (exactly three: true)
-- Every item is a question: true
-- Prohibited vocabulary: none
+As verificações estruturais passaram.
+- Um título de nível um: true
+- Seção Narrative: true
+- Extensão da narrativa: 126 palavras (dentro de 100-140: true)
+- Seção Visitor questions: true
+- Perguntas numeradas: 3 (exatamente três: true)
+- Todo item é uma pergunta: true
+- Vocabulário proibido: nenhum
 
-Structural checks do not prove factual grounding. Unsupported claims require human review or a separate evaluator.
+As verificações estruturais não comprovam a fundamentação factual. Afirmações sem respaldo exigem revisão humana ou um avaliador separado.
 ```
 
 Uma execução que falha é igualmente informativa, e mais cedo ou mais tarde você verá uma — o
 tamanho da narrativa costuma ser o culpado:
 
 ```text
-Structural checks found issues:
-- One level-one title: true
-- Narrative section: true
-- Narrative length: 163 words (within 100-140: false)
-- Visitor questions section: true
-- Numbered questions: 3 (exactly three: true)
-- Every item is a question: true
-- Prohibited vocabulary: none
-  - The narrative must contain 100-140 words; found 163.
+As verificações estruturais encontraram problemas:
+- Um título de nível um: true
+- Seção Narrative: true
+- Extensão da narrativa: 163 palavras (dentro de 100-140: false)
+- Seção Visitor questions: true
+- Perguntas numeradas: 3 (exatamente três: true)
+- Todo item é uma pergunta: true
+- Vocabulário proibido: nenhum
+  - A narrativa deve conter de 100 a 140 palavras; encontradas 163.
 
-Structural checks do not prove factual grounding. Unsupported claims require human review or a separate evaluator.
+As verificações estruturais não comprovam a fundamentação factual. Afirmações sem respaldo exigem revisão humana ou um avaliador separado.
 ```
 
 Mesmo assim, a execução termina com sucesso. Isso é intencional: o relatório serve para um curador
@@ -123,7 +123,7 @@ Provoque uma falha de propósito para ver a regra de vocabulário em ação. Inf
 próprio:
 
 ```text
-The museum's ticketing terminal was installed in 1998.
+O terminal de bilheteria do museu foi instalado em 1998.
 ```
 
 A exposição vai repetir a palavra `terminal`, e o relatório vai apontá-la — a verificação lê a
