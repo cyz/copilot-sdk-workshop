@@ -14,12 +14,13 @@
     <link rel="stylesheet" href="../step.css">
     <link rel="stylesheet" href="../light-theme.css">
     <script src="../theme-toggle.js"></script>
+    <script src="../localization.js"></script>
     <script src="../language-registry.js"></script>
     <script src="../language-navigation.js"></script>
     <script src="../markdown-language-preprocessor.js"></script>
 </head>
 <body>
-    <a class="skip-link" href="#lessonContent">Skip to lesson</a>
+    <a class="skip-link" id="skipLessonLink" href="#lessonContent">Skip to lesson</a>
 
     <header class="header">
         <div class="header-content">
@@ -37,16 +38,21 @@
                 <span class="visually-hidden" id="headerLessonTitle">Loading lesson</span>
             </a>
 
-            <nav class="header-nav" aria-label="Lesson actions">
-                <label class="language-select-label" for="languageSelector">Language</label>
+            <nav class="header-nav" id="headerNav" aria-label="Lesson actions">
+                <label class="language-select-label" id="languageSelectLabel" for="languageSelector">Language</label>
                 <select class="language-select" id="languageSelector" aria-label="Workshop language">
-                    <option value="">Choose language</option>
+                    <option id="chooseLanguageOption" value="">Choose language</option>
                     <option value="dotnet">.NET</option>
                     <option value="go">Go</option>
                     <option value="java">Java</option>
                     <option value="nodejs">Node.js</option>
                     <option value="python">Python</option>
                     <option value="rust">Rust</option>
+                </select>
+                <label class="visually-hidden" id="localeSelectLabel" for="localeSelector">Content language</label>
+                <select class="language-select locale-select" id="localeSelector" aria-label="Content language">
+                    <option value="en">English</option>
+                    <option value="pt-BR">Português (Brasil)</option>
                 </select>
                 <a href="../index.html" class="nav-btn" id="hubLink">🏠 Hub</a>
                 <a class="nav-btn" id="headerDocsLink" target="_blank" rel="noopener" hidden>📚 Docs ↗</a>
@@ -97,7 +103,7 @@
                 <div class="lesson-content" id="lessonContent">
                     <p class="visually-hidden" id="lessonStatus" role="status" aria-live="polite">Loading lesson.</p>
                     <div id="markdownContent" aria-busy="true">
-                        <p class="loading-message">Loading lesson...</p>
+                        <p class="loading-message" id="loadingMessage">Loading lesson...</p>
                     </div>
                     <nav class="nav-footer" id="lessonFooter" aria-label="Lesson pagination"></nav>
                 </div>
@@ -318,9 +324,67 @@
         const closeNavigationButton = document.getElementById('closeNavigationButton');
         const compactNavigation = window.matchMedia('(max-width: 900px)');
         const languageSelector = document.getElementById('languageSelector');
+        const localeSelector = document.getElementById('localeSelector');
         const storageKey = 'copilot-sdk-workshop.language';
+        const localeStorageKey = 'copilot-sdk-workshop.locale';
+        let currentLocale = WorkshopLocalization.resolveLocale(
+            window.location.search,
+            getStoredValue(localeStorageKey)
+        );
+        let messages = WorkshopLocalization.getMessages(currentLocale.id);
+        let lessonMessages = messages.lesson;
         let currentIndex = 0;
         let focusBeforeNavigation;
+
+        function getStoredValue(key) {
+            try {
+                return window.localStorage.getItem(key);
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function storeValue(key, value) {
+            try {
+                window.localStorage.setItem(key, value);
+            } catch (error) {
+                // The workshop remains usable when local storage is unavailable.
+            }
+        }
+
+        function localizedStep(step) {
+            return { ...step, ...(messages.steps[step.id] ?? {}) };
+        }
+
+        function applyLocale() {
+            messages = WorkshopLocalization.getMessages(currentLocale.id);
+            lessonMessages = messages.lesson;
+            document.documentElement.lang = currentLocale.id;
+            document.querySelector('meta[name="description"]').content = lessonMessages.pageDescription;
+            localeSelector.value = currentLocale.id;
+            document.getElementById('skipLessonLink').textContent = lessonMessages.skipLink;
+            menuButton.setAttribute('aria-label', lessonMessages.openSections);
+            document.getElementById('homeLink').setAttribute('aria-label', lessonMessages.homeLabel);
+            document.getElementById('headerNav').setAttribute('aria-label', lessonMessages.actionsLabel);
+            document.getElementById('languageSelectLabel').textContent = lessonMessages.languageLabel;
+            languageSelector.setAttribute('aria-label', lessonMessages.languageAriaLabel);
+            document.getElementById('chooseLanguageOption').textContent = lessonMessages.chooseLanguage;
+            document.getElementById('localeSelectLabel').textContent = messages.localeLabel;
+            localeSelector.setAttribute('aria-label', messages.localeLabel);
+            document.getElementById('hubLink').textContent = lessonMessages.hub;
+            document.getElementById('headerDocsLink').textContent = lessonMessages.docs;
+            document.getElementById('progressTrack').setAttribute('aria-label', lessonMessages.progressLabel);
+            closeNavigationButton.setAttribute('aria-label', lessonMessages.closeSections);
+            document.getElementById('workshopNavigation').setAttribute('aria-label', lessonMessages.workshopSteps);
+            document.getElementById('lessonFooter').setAttribute('aria-label', lessonMessages.paginationLabel);
+            document.querySelectorAll('.theme-toggle').forEach(button => {
+                button.dataset.lightLabel = messages.themeLight;
+                button.dataset.darkLabel = messages.themeDark;
+                button.dataset.switchToLight = messages.switchToLight;
+                button.dataset.switchToDark = messages.switchToDark;
+            });
+            updateToggleIcon();
+        }
 
         function getPathSegments() {
             return window.location.pathname.split('/').filter(Boolean);
@@ -349,19 +413,11 @@
         }
 
         function getStoredLanguageId() {
-            try {
-                return window.localStorage.getItem(storageKey);
-            } catch (error) {
-                return null;
-            }
+            return getStoredValue(storageKey);
         }
 
         function storeLanguageId(languageId) {
-            try {
-                window.localStorage.setItem(storageKey, languageId);
-            } catch (error) {
-                // The workshop remains usable when local storage is unavailable.
-            }
+            storeValue(storageKey, languageId);
         }
 
         function getSelectedLanguage() {
@@ -373,7 +429,11 @@
         }
 
         function homeUrl(language) {
-            return WorkshopLanguageNavigation.homeUrl(language?.id, activeWorkshopId);
+            return WorkshopLanguageNavigation.homeUrl(
+                language?.id,
+                activeWorkshopId,
+                currentLocale.id
+            );
         }
 
         function updateLanguageControls(language) {
@@ -382,7 +442,9 @@
             docsLink.hidden = language === null;
             if (language) {
                 docsLink.href = language.docsUrl;
-                docsLink.textContent = `📚 ${language.displayName} docs ↗`;
+                docsLink.textContent = WorkshopLocalization.format(lessonMessages.docsFor, {
+                    language: language.displayName
+                });
             } else {
                 docsLink.removeAttribute('href');
             }
@@ -392,7 +454,11 @@
 
         function stepUrl(step) {
             const language = getSelectedLanguage();
-            return WorkshopLanguageNavigation.lessonUrl(step.id, language?.id);
+            return WorkshopLanguageNavigation.lessonUrl(
+                step.id,
+                language?.id,
+                currentLocale.id
+            );
         }
 
         function setNavigationOpen(open) {
@@ -400,7 +466,10 @@
             navigationPanel.classList.toggle('open', shouldOpen);
             navigationOverlay.classList.toggle('open', shouldOpen);
             menuButton.setAttribute('aria-expanded', String(shouldOpen));
-            menuButton.setAttribute('aria-label', `${shouldOpen ? 'Close' : 'Open'} sections`);
+            menuButton.setAttribute(
+                'aria-label',
+                shouldOpen ? lessonMessages.closeSections : lessonMessages.openSections
+            );
             document.body.classList.toggle('navigation-open', shouldOpen);
             const hideNavigation = compactNavigation.matches && !shouldOpen;
             navigationPanel.toggleAttribute('inert', hideNavigation);
@@ -454,16 +523,17 @@
 
         function buildNavigation() {
             const groups = [
-                { label: 'Before you begin', steps: steps.filter(step => step.kind === 'preflight') },
-                { label: 'Core workshop', steps: steps.filter(step => step.kind === 'core') },
-                { label: 'Optional extension', steps: steps.filter(step => step.kind === 'optional') }
+                { label: lessonMessages.beforeBegin, steps: steps.filter(step => step.kind === 'preflight') },
+                { label: lessonMessages.coreWorkshop, steps: steps.filter(step => step.kind === 'core') },
+                { label: lessonMessages.optionalExtension, steps: steps.filter(step => step.kind === 'optional') }
             ];
 
             document.getElementById('workshopNavigation').innerHTML = groups.map(group => `
                 <section class="navigation-group">
                     <h3>${group.label}</h3>
-                    ${group.steps.map(step => {
-                        const index = steps.findIndex(candidate => candidate.id === step.id);
+                    ${group.steps.map(baseStep => {
+                        const step = localizedStep(baseStep);
+                        const index = steps.findIndex(candidate => candidate.id === baseStep.id);
                         const active = index === currentIndex;
                         const marker = step.kind === 'core' ? step.number : step.kind === 'optional' ? '+' : 'P';
                         return `
@@ -483,8 +553,12 @@
         }
 
         function updatePagination() {
-            const previous = steps[currentIndex - 1];
-            const next = steps[currentIndex + 1];
+            const previous = steps[currentIndex - 1]
+                ? localizedStep(steps[currentIndex - 1])
+                : null;
+            const next = steps[currentIndex + 1]
+                ? localizedStep(steps[currentIndex + 1])
+                : null;
             const previousHeaderLink = document.getElementById('previousHeaderLink');
             const nextHeaderLink = document.getElementById('nextHeaderLink');
 
@@ -492,23 +566,23 @@
             nextHeaderLink.hidden = !next;
             if (previous) {
                 previousHeaderLink.href = stepUrl(previous);
-                previousHeaderLink.textContent = '← Prev';
-                previousHeaderLink.setAttribute('aria-label', `Previous: ${previous.title}`);
+                previousHeaderLink.textContent = `← ${lessonMessages.previous}`;
+                previousHeaderLink.setAttribute('aria-label', `${lessonMessages.previous}: ${previous.title}`);
             }
             if (next) {
                 nextHeaderLink.href = stepUrl(next);
-                nextHeaderLink.textContent = 'Next →';
-                nextHeaderLink.setAttribute('aria-label', `Next: ${next.title}`);
+                nextHeaderLink.textContent = `${lessonMessages.next} →`;
+                nextHeaderLink.setAttribute('aria-label', `${lessonMessages.next}: ${next.title}`);
             }
 
             const footer = document.getElementById('lessonFooter');
             footer.innerHTML = `
                 ${previous
                     ? `<a href="${stepUrl(previous)}" class="nav-footer-btn">← ${previous.navTitle}</a>`
-                    : '<span class="nav-footer-btn disabled" aria-disabled="true">← Previous</span>'}
+                    : `<span class="nav-footer-btn disabled" aria-disabled="true">← ${lessonMessages.previous}</span>`}
                 ${next
                     ? `<a href="${stepUrl(next)}" class="nav-footer-btn">${next.navTitle} →</a>`
-                    : '<span class="nav-footer-btn disabled" aria-disabled="true">Next →</span>'}`;
+                    : `<span class="nav-footer-btn disabled" aria-disabled="true">${lessonMessages.next} →</span>`}`;
         }
 
         function updateProgress(step) {
@@ -520,13 +594,16 @@
             let progressValue = 0;
 
             if (step.kind === 'core') {
-                position.textContent = `Step ${step.number} of ${coreStepCount}`;
+                position.textContent = WorkshopLocalization.format(lessonMessages.stepOf, {
+                    number: step.number,
+                    count: coreStepCount
+                });
                 progressValue = step.number;
             } else if (step.kind === 'optional') {
-                position.textContent = 'Optional extension';
+                position.textContent = lessonMessages.optionalExtension;
                 progressValue = coreStepCount;
             } else {
-                position.textContent = 'Preflight';
+                position.textContent = lessonMessages.preflight;
             }
 
             estimate.textContent = step.time;
@@ -569,16 +646,16 @@
                     }
                 }
 
-                button.textContent = 'Copied';
+                button.textContent = lessonMessages.copied;
                 button.classList.add('copied');
             } catch (error) {
-                button.textContent = 'Copy failed';
+                button.textContent = lessonMessages.copyFailed;
                 button.classList.add('copy-error');
                 console.error('Unable to copy code:', error);
             }
 
             window.setTimeout(() => {
-                button.textContent = 'Copy';
+                button.textContent = lessonMessages.copy;
                 button.classList.remove('copied', 'copy-error');
             }, 1800);
         }
@@ -593,8 +670,8 @@
                 const button = document.createElement('button');
                 button.type = 'button';
                 button.className = 'copy-code-button';
-                button.textContent = 'Copy';
-                button.setAttribute('aria-label', 'Copy code block');
+                button.textContent = lessonMessages.copy;
+                button.setAttribute('aria-label', lessonMessages.copyCodeBlock);
                 button.addEventListener('click', () => copyCode(button, codeBlock));
                 pre.append(button);
             });
@@ -674,45 +751,73 @@
             const message = document.createElement('div');
             message.className = 'load-error';
             const heading = document.createElement('h1');
-            heading.textContent = 'Unable to load this lesson';
+            heading.textContent = lessonMessages.unableToLoad;
             const details = document.createElement('p');
             details.textContent = error.message;
             const guidance = document.createElement('p');
             guidance.textContent = window.location.protocol === 'file:'
-                ? 'Serve the repository with a local HTTP server; browsers block lesson fetches from file URLs.'
-                : 'Refresh the page. If the problem continues, verify that the workshop Markdown was deployed.';
+                ? lessonMessages.serveLocally
+                : lessonMessages.refreshGuidance;
             message.append(heading, details, guidance);
             container.replaceChildren(message);
             container.setAttribute('aria-busy', 'false');
-            status.textContent = 'Unable to load this lesson.';
+            status.textContent = lessonMessages.unableStatus;
+        }
+
+        function localizedLessonFile(file) {
+            return currentLocale.id === WorkshopLocalization.defaultLocale
+                ? file
+                : file.replace(/^workshop\//, `workshop/${currentLocale.id}/`);
+        }
+
+        async function fetchLesson(file) {
+            let response = await fetch(getMarkdownUrl(localizedLessonFile(file)));
+            let usedFallback = false;
+            if (!response.ok && currentLocale.id !== WorkshopLocalization.defaultLocale) {
+                response = await fetch(getMarkdownUrl(file));
+                usedFallback = true;
+            }
+            if (!response.ok) {
+                throw new Error(WorkshopLocalization.format(lessonMessages.lessonRequestFailed, {
+                    status: response.status
+                }));
+            }
+            return { markdown: await response.text(), usedFallback };
         }
 
         async function loadStep() {
+            currentLocale = WorkshopLocalization.resolveLocale(
+                window.location.search,
+                getStoredValue(localeStorageKey)
+            );
+            storeValue(localeStorageKey, currentLocale.id);
+            applyLocale();
             const language = getSelectedLanguage();
             const stepId = getRequestedStepId();
             currentIndex = steps.findIndex(step => step.id === stepId);
-            const step = steps[currentIndex];
+            const step = localizedStep(steps[currentIndex]);
             const container = document.getElementById('markdownContent');
             const status = document.getElementById('lessonStatus');
 
             updateLanguageControls(language);
             document.querySelector('.header-title').textContent = activeWorkshop.title;
-            document.getElementById('navigationTitle').textContent = `${activeWorkshop.title} steps`;
+            document.getElementById('navigationTitle').textContent =
+                `${activeWorkshop.title} · ${lessonMessages.workshopSteps}`;
             if (!language) {
-                document.title = 'Choose a language | Copilot SDK Workshop';
-                document.getElementById('headerLessonTitle').textContent = 'Choose a language';
+                document.title = lessonMessages.chooseLanguagePageTitle;
+                document.getElementById('headerLessonTitle').textContent = lessonMessages.chooseLanguage;
                 buildNavigation();
                 updatePagination();
                 const message = document.createElement('section');
                 message.className = 'load-error language-choice';
                 const heading = document.createElement('h1');
-                heading.textContent = 'Choose a workshop language';
+                heading.textContent = lessonMessages.chooseLanguageHeading;
                 const details = document.createElement('p');
-                details.textContent = 'Select one of the six supported languages above before loading a lesson.';
+                details.textContent = lessonMessages.chooseLanguageDetails;
                 message.append(heading, details);
                 container.replaceChildren(message);
                 container.setAttribute('aria-busy', 'false');
-                status.textContent = 'Choose a workshop language to continue.';
+                status.textContent = lessonMessages.chooseLanguageStatus;
                 return;
             }
 
@@ -722,20 +827,24 @@
             buildNavigation();
             updatePagination();
             container.setAttribute('aria-busy', 'true');
-            status.textContent = `Loading ${step.title}.`;
+            status.textContent = WorkshopLocalization.format(lessonMessages.loadingStatus, {
+                title: step.title
+            });
 
             try {
-                const response = await fetch(getMarkdownUrl(step.file));
-                if (!response.ok) {
-                    throw new Error(`Lesson request failed with HTTP ${response.status}.`);
-                }
-
-                const markdown = processMarkdown(await response.text());
-                container.innerHTML =
-                    `<article class="markdown">${marked.parse(markdown, { gfm: true })}</article>`;
+                const lesson = await fetchLesson(step.file);
+                const markdown = processMarkdown(lesson.markdown);
+                const fallbackNotice = lesson.usedFallback
+                    ? `<aside class="translation-notice" role="status">${lessonMessages.fallbackNotice}</aside>`
+                    : '';
+                container.innerHTML = `${fallbackNotice}<article class="markdown">${
+                    marked.parse(markdown, { gfm: true })
+                }</article>`;
                 prepareRenderedLesson();
                 container.setAttribute('aria-busy', 'false');
-                status.textContent = `Loaded ${step.title}.`;
+                status.textContent = WorkshopLocalization.format(lessonMessages.loadedStatus, {
+                    title: step.title
+                });
             } catch (error) {
                 showLoadError(error);
             }
@@ -755,6 +864,14 @@
             storeLanguageId(language.id);
             const url = new URL(window.location.href);
             url.searchParams.set('lang', language.id);
+            window.history.replaceState({}, '', url);
+            loadStep();
+        });
+        localeSelector.addEventListener('change', () => {
+            currentLocale = WorkshopLocalization.getLocale(localeSelector.value);
+            storeValue(localeStorageKey, currentLocale.id);
+            const url = new URL(window.location.href);
+            url.searchParams.set('locale', currentLocale.id);
             window.history.replaceState({}, '', url);
             loadStep();
         });

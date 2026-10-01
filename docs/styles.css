@@ -147,6 +147,18 @@ a {
     border-radius: 6px;
 }
 
+.locale-control select {
+    max-width: 11rem;
+    padding: 0.45rem 1.75rem 0.45rem 0.65rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.86rem;
+    font-weight: 600;
+}
+
 .home-shell {
     width: min(1180px, calc(100% - 2.5rem));
     min-height: calc(100svh - 4.5rem);
@@ -529,6 +541,10 @@ h1 {
 
     .site-nav {
         gap: 0.5rem;
+    }
+
+    .locale-control select {
+        max-width: 8.5rem;
     }
 
     .site-nav a {

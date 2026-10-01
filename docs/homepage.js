@@ -2,6 +2,8 @@
     'use strict';
 
     const storageKey = 'copilot-sdk-workshop.language';
+    const localeStorageKey = 'copilot-sdk-workshop.locale';
+    const localeSelector = document.getElementById('localeSelector');
     const picker = document.getElementById('languagePicker');
     const languageInputs = [...document.querySelectorAll('input[name="language"]')];
     const startLink = document.getElementById('startWorkshopLink');
@@ -16,41 +18,39 @@
     const startGuidance = document.getElementById('startGuidance');
     let selectedWorkshopId = null;
 
-    const workshops = {
+    const workshopMetadata = {
         sdlc: {
-            name: 'Accessibility reviewer',
             previewTitle: 'accessibility-reviewer',
-            preview: `URL → Playwright inspection
-     → WCAG lookup
-     → structured report
-
-[tool] playwright-browser_navigate
-[tool] accessibility_rule_lookup
-
-Finding
-The name input has no accessible name.`,
-            guidance: 'Build an SDLC developer tool in a 90-minute core workshop.'
         },
         museum: {
-            name: 'Museum Exhibit Studio',
             previewTitle: 'museum-exhibit-studio',
-            preview: `Approved facts → curator session
-               → exhibit validation
-               → visitor-ready copy
-
-Available tools: []
-System message: replace
-
-# Journey to the Moon
-## Narrative
-## Visitor questions`,
-            guidance: 'Build a non-SDLC curator tool in a 90-minute core workshop.'
         }
     };
+    let locale = WorkshopLocalization.resolveLocale(
+        window.location.search,
+        getStoredValue(localeStorageKey)
+    );
+    let messages = WorkshopLocalization.getMessages(locale.id);
+
+    function getStoredValue(key) {
+        try {
+            return window.localStorage.getItem(key);
+        } catch (error) {
+            return null;
+        }
+    }
+
+    function storeValue(key, value) {
+        try {
+            window.localStorage.setItem(key, value);
+        } catch (error) {
+            // Local storage can be unavailable in private browsing contexts.
+        }
+    }
 
     function getStoredLanguageId() {
         try {
-            return window.localStorage.getItem(storageKey);
+            return getStoredValue(storageKey);
         } catch (error) {
             return null;
         }
@@ -58,16 +58,37 @@ System message: replace
 
     function storeLanguageId(languageId) {
         try {
-            window.localStorage.setItem(storageKey, languageId);
+            storeValue(storageKey, languageId);
         } catch (error) {
             // Local storage can be unavailable in private browsing contexts.
         }
     }
 
+    function applyLocale() {
+        messages = WorkshopLocalization.getMessages(locale.id);
+        document.documentElement.lang = locale.id;
+        document.title = messages.pageTitle;
+        document.querySelector('meta[name="description"]').content = messages.pageDescription;
+        localeSelector.value = locale.id;
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            element.textContent = messages[element.dataset.i18n];
+        });
+        document.querySelectorAll('[data-i18n-aria-label]').forEach(element => {
+            element.setAttribute('aria-label', messages[element.dataset.i18nAriaLabel]);
+        });
+        document.querySelectorAll('.theme-toggle').forEach(button => {
+            button.dataset.lightLabel = messages.themeLight;
+            button.dataset.darkLabel = messages.themeDark;
+            button.dataset.switchToLight = messages.switchToLight;
+            button.dataset.switchToDark = messages.switchToDark;
+        });
+        updateToggleIcon();
+    }
+
     function updateSelection(languageId) {
         const language = WorkshopLanguages.getLanguage(languageId);
         const hasLanguage = language !== null;
-        const workshop = selectedWorkshopId ? workshops[selectedWorkshopId] : null;
+        const workshop = selectedWorkshopId ? messages.workshops[selectedWorkshopId] : null;
         const ready = workshop !== null && hasLanguage;
 
         picker.disabled = workshop === null;
@@ -77,43 +98,50 @@ System message: replace
         startLink.classList.toggle('disabled', !ready);
         startLink.setAttribute('aria-disabled', String(!ready));
         startLink.href = ready
-            ? WorkshopLanguageNavigation.firstLessonUrl(language.id, selectedWorkshopId)
+            ? WorkshopLanguageNavigation.firstLessonUrl(language.id, selectedWorkshopId, locale.id)
             : workshop ? '#language-picker' : '#workshop-picker';
-        startLink.textContent = ready ? `Start ${workshop.name}` : 'Start selected workshop';
+        startLink.textContent = ready
+            ? WorkshopLocalization.format(messages.startWorkshop, { workshop: workshop.name })
+            : messages.startSelected;
         targetAppLink.hidden = selectedWorkshopId !== 'sdlc';
 
         if (!hasLanguage) {
             docsLink.removeAttribute('href');
             docsLink.setAttribute('aria-disabled', 'true');
             summary.textContent = workshop
-                ? `Now choose a language for ${workshop.name}.`
-                : 'Choose a workshop first, then select its implementation language.';
+                ? WorkshopLocalization.format(messages.nowChooseLanguage, { workshop: workshop.name })
+                : messages.chooseWorkshopThenLanguage;
             installCommand.textContent = '';
             runtimeNote.textContent = '';
-            startGuidance.textContent = workshop?.guidance ??
-                'Choose a workshop and language. No prior agent or SDK experience required.';
+            startGuidance.textContent = workshop?.guidance ?? messages.startGuidance;
             return;
         }
 
         docsLink.href = language.docsUrl;
         docsLink.removeAttribute('aria-disabled');
-        docsLink.textContent = `${language.displayName} SDK docs ↗`;
+        docsLink.textContent = WorkshopLocalization.format(messages.sdkDocsFor, {
+            language: language.displayName
+        });
         summary.textContent = workshop
-            ? `${workshop.name} will use the ${language.displayName} SDK.`
-            : 'Choose a workshop to continue.';
+            ? WorkshopLocalization.format(messages.workshopUsesSdk, {
+                workshop: workshop.name,
+                language: language.displayName
+            })
+            : messages.chooseWorkshopToContinue;
         installCommand.textContent = language.installCommand;
         runtimeNote.textContent = language.runtimeNote;
-        startGuidance.textContent = workshop?.guidance ?? 'Choose a workshop to continue.';
+        startGuidance.textContent = workshop?.guidance ?? messages.chooseWorkshopToContinue;
     }
 
     function selectWorkshop(workshopId) {
-        selectedWorkshopId = workshops[workshopId] ? workshopId : null;
+        selectedWorkshopId = workshopMetadata[workshopId] ? workshopId : null;
         document.querySelectorAll('.workshop-option').forEach(option => {
             option.classList.toggle('selected', option.dataset.workshop === selectedWorkshopId);
         });
-        const workshop = selectedWorkshopId ? workshops[selectedWorkshopId] : null;
-        previewTitle.textContent = workshop?.previewTitle ?? 'workshop-preview';
-        preview.textContent = workshop?.preview ?? 'Select a workshop to preview its agent flow.';
+        const metadata = selectedWorkshopId ? workshopMetadata[selectedWorkshopId] : null;
+        const workshop = selectedWorkshopId ? messages.workshops[selectedWorkshopId] : null;
+        previewTitle.textContent = metadata?.previewTitle ?? 'workshop-preview';
+        preview.textContent = workshop?.preview ?? messages.previewPlaceholder;
         updateSelection(languageInputs.find(input => input.checked)?.value ?? null);
         if (workshop) {
             languageInputs[0].focus();
@@ -132,6 +160,20 @@ System message: replace
         input.addEventListener('change', () => selectWorkshop(input.value));
     });
 
+    localeSelector.addEventListener('change', () => {
+        locale = WorkshopLocalization.getLocale(localeSelector.value);
+        storeValue(localeStorageKey, locale.id);
+        const url = new URL(window.location.href);
+        url.searchParams.set('locale', locale.id);
+        window.history.replaceState({}, '', url);
+        applyLocale();
+        updateSelection(languageInputs.find(input => input.checked)?.value ?? null);
+        if (selectedWorkshopId) {
+            const workshop = messages.workshops[selectedWorkshopId];
+            preview.textContent = workshop.preview;
+        }
+    });
+
     startLink.addEventListener('click', event => {
         if (startLink.getAttribute('aria-disabled') === 'true') {
             event.preventDefault();
@@ -143,6 +185,9 @@ System message: replace
             }
         }
     });
+
+    applyLocale();
+    storeValue(localeStorageKey, locale.id);
 
     const initialLanguage = WorkshopLanguageNavigation.resolveLanguage(
         window.location.search,

@@ -1478,6 +1478,7 @@ def validate_site_behavior() -> None:
     index = read(DOCS / "index.html")
     step = read(DOCS / "workshop" / "step.html")
     navigation = read(DOCS / "language-navigation.js")
+    localization = read(DOCS / "localization.js")
     require(index.count('class="primary-action"') == 1, "Homepage must have exactly one primary action")
     require(index.count('name="workshop"') == 2, "Homepage must offer exactly two workshop choices")
     require('value="sdlc"' in index and 'value="museum"' in index,
@@ -1490,7 +1491,8 @@ def validate_site_behavior() -> None:
     require("language-navigation.js" in index and "language-navigation.js" in step, "Homepage and lessons must share language navigation")
     require("resolveLanguage" in navigation and "lessonUrl" in navigation and "firstLessonUrl" in navigation, "Language navigation must preserve URL propagation")
     require("localStorage" in read(DOCS / "homepage.js") and "localStorage" in step, "Homepage and lessons must persist language selection")
-    require("Choose a workshop language" in step and "if (!language)" in step, "Lessons must not load without a valid language")
+    require("chooseLanguageHeading" in localization and "if (!language)" in step,
+            "Lessons must not load without a valid language")
     require("preprocessLanguageDirectives" in step, "Lesson viewer must filter language directives")
     require("workshopTracks" in step and "activeWorkshopId" in step,
             "Lesson viewer must scope navigation to the active workshop")

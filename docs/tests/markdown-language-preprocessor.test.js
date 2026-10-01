@@ -10,6 +10,12 @@ const {
     siteRootUrl
 } = require('../language-navigation.js');
 const { preprocessLanguageDirectives } = require('../markdown-language-preprocessor.js');
+const {
+    format,
+    getLocale,
+    getMessages,
+    resolveLocale
+} = require('../localization.js');
 
 const preprocess = (markdown, languageId) =>
     preprocessLanguageDirectives(markdown, languageId, getLanguage);
@@ -33,10 +39,22 @@ assert.throws(() => preprocess(':::unexpected', 'dotnet'), /expected :::language
 
 assert.equal(lessonUrl('04-mcp-safety', 'rust'), '?step=04-mcp-safety&lang=rust');
 assert.equal(lessonUrl('04-mcp-safety'), '?step=04-mcp-safety');
+assert.equal(
+    lessonUrl('04-mcp-safety', 'rust', 'pt-BR'),
+    '?step=04-mcp-safety&lang=rust&locale=pt-BR'
+);
 assert.equal(firstLessonUrl('java'), 'workshop/step.html?step=00-preflight&lang=java');
 assert.equal(firstLessonUrl('python', 'museum'), 'workshop/step.html?step=museum-00-preflight&lang=python');
+assert.equal(
+    firstLessonUrl('python', 'museum', 'pt-BR'),
+    'workshop/step.html?step=museum-00-preflight&lang=python&locale=pt-BR'
+);
 assert.equal(homeUrl('python'), '../index.html?lang=python');
 assert.equal(homeUrl('python', 'museum'), '../index.html?lang=python&workshop=museum');
+assert.equal(
+    homeUrl('python', 'museum', 'pt-BR'),
+    '../index.html?lang=python&workshop=museum&locale=pt-BR'
+);
 assert.equal(homeUrl(), '../index.html');
 assert.equal(
     siteRootUrl('https://expert-adventure-l67eo16.pages.github.io/workshop/step.html?step=00-preflight').href,
@@ -49,5 +67,20 @@ assert.equal(
 assert.equal(resolveLanguage('?lang=go', 'rust', getLanguage).id, 'go');
 assert.equal(resolveLanguage('', 'rust', getLanguage).id, 'rust');
 assert.equal(resolveLanguage('?lang=unknown', 'rust', getLanguage), null);
+
+assert.equal(resolveLocale('', null).id, 'en');
+assert.equal(resolveLocale('?locale=pt-BR', null).id, 'pt-BR');
+assert.equal(resolveLocale('?locale=PT-br', null).id, 'pt-BR');
+assert.equal(resolveLocale('', 'pt-BR').id, 'pt-BR');
+assert.equal(resolveLocale('?locale=unknown', 'pt-BR').id, 'pt-BR');
+assert.equal(getLocale('unknown'), null);
+assert.equal(getMessages('unknown').pageTitle, getMessages('en').pageTitle);
+assert.equal(
+    format('{workshop} usará o SDK para {language}.', {
+        workshop: 'Accessibility Reviewer',
+        language: 'Python'
+    }),
+    'Accessibility Reviewer usará o SDK para Python.'
+);
 
 console.log('Workshop language directive and navigation tests passed.');

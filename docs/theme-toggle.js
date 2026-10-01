@@ -14,8 +14,12 @@ function toggleTheme() {
 function updateToggleIcon() {
     const isLight = document.documentElement.dataset.theme === 'light';
     document.querySelectorAll('.theme-toggle').forEach(button => {
-        button.textContent = isLight ? '🌙 Dark' : '☀️ Light';
-        button.setAttribute('aria-label', `Switch to ${isLight ? 'dark' : 'light'} theme`);
+        const lightLabel = button.dataset.lightLabel ?? 'Light';
+        const darkLabel = button.dataset.darkLabel ?? 'Dark';
+        const switchToLight = button.dataset.switchToLight ?? 'Switch to light theme';
+        const switchToDark = button.dataset.switchToDark ?? 'Switch to dark theme';
+        button.textContent = isLight ? `🌙 ${darkLabel}` : `☀️ ${lightLabel}`;
+        button.setAttribute('aria-label', isLight ? switchToDark : switchToLight);
     });
 }
 

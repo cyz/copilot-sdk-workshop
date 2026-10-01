@@ -15,15 +15,18 @@
         return getLanguage(storedLanguageId);
     }
 
-    function lessonUrl(stepId, languageId) {
+    function lessonUrl(stepId, languageId, locale) {
         const parameters = new URLSearchParams({ step: stepId });
         if (languageId) {
             parameters.set('lang', languageId);
         }
+        if (locale) {
+            parameters.set('locale', locale);
+        }
         return `?${parameters.toString()}`;
     }
 
-    function homeUrl(languageId, workshopId) {
+    function homeUrl(languageId, workshopId, locale) {
         const parameters = new URLSearchParams();
         if (languageId) {
             parameters.set('lang', languageId);
@@ -31,15 +34,18 @@
         if (workshopId) {
             parameters.set('workshop', workshopId);
         }
+        if (locale) {
+            parameters.set('locale', locale);
+        }
         const query = parameters.toString();
         return query ? `../index.html?${query}` : '../index.html';
     }
 
-    function firstLessonUrl(languageId, workshopId = 'sdlc') {
+    function firstLessonUrl(languageId, workshopId = 'sdlc', locale) {
         const firstStep = workshopId === 'museum'
             ? 'museum-00-preflight'
             : '00-preflight';
-        return `workshop/step.html${lessonUrl(firstStep, languageId)}`;
+        return `workshop/step.html${lessonUrl(firstStep, languageId, locale)}`;
     }
 
     function siteRootUrl(lessonPageUrl) {
